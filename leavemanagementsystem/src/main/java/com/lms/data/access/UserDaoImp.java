@@ -42,4 +42,25 @@ public class UserDaoImp extends JdbcDaoSupport implements UserDao{
         return  userList;
     }
 
+    @Override
+    public User getUserByName(String name) {
+        String sql="select * from userh where name= ?";
+        User user= (User) getJdbcTemplate().queryForObject(sql, new Object[]{name}, new UserMapper());
+        return user;
+    }
+
+    @Override
+    public User getUserById(int id) {
+        String sql="select * from userh where userid= ?";
+        User user= (User) getJdbcTemplate().queryForObject(sql, new Object[]{id}, new UserMapper());
+        return user;
+    }
+
+    @Override
+    public int getUserCount() {
+        String sql="select count(*) from userh";
+        int epmloyeeCount = getJdbcTemplate().queryForObject(sql, Integer.class);
+        return  epmloyeeCount;
+    }
+
 }

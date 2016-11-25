@@ -11,11 +11,13 @@ import java.sql.SQLException;
  */
 public class LeaveMapper implements RowMapper {
     @Override
-    public Object mapRow(ResultSet resultSet, int i) throws SQLException {
+    public Leave mapRow(ResultSet resultSet, int i) throws SQLException {
         Leave leave = new Leave();
         leave.setUserId(resultSet.getInt("userid"));
-        leave.setLeaveDate(resultSet.getDate("leavedate"));
-        leave.setLeaveType(resultSet.getInt("leavetype"));
+        leave.setLeaveDate(resultSet.getString("leavedate"));
+        leave.setLeaveType(resultSet.getString("leavetype"));
+        leave.setReasonToLeave(resultSet.getString("reason"));
+        leave.setComment(resultSet.getString("comment"));
         return leave;
     }
 }

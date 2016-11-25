@@ -24,4 +24,11 @@ public class UserService {
     public List<User> getAllUsers(){
         return userDao.getAllUsers();
     }
+
+    public User getUser(int userId){
+        return userDao.getUserById(userId);
+    }
+    public int getUserCount(){
+        return userDao.getUserCount();
+    }
 }

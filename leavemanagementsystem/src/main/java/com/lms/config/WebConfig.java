@@ -16,6 +16,9 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 @EnableWebMvc
+
+
+
 public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public ViewResolver viewResolver() {
@@ -39,5 +42,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
                 .addResourceLocations("/WEB-INF/resources/")
                 .setCachePeriod(3600);
     }
+
+
 
 }
