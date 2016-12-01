@@ -2,14 +2,13 @@ package com.lms.service;
 
 import com.lms.data.access.LeaveDao;
 import com.lms.data.access.UserDao;
-import com.lms.entity.Chart;
-import com.lms.entity.KeyValue;
+import com.lms.formentity.Chart;
+import com.lms.formentity.KeyValue;
 import com.lms.entity.Leave;
 import com.lms.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.jws.soap.SOAPBinding;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;

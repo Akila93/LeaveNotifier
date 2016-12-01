@@ -1,4 +1,4 @@
-package com.lms.entity;
+package com.lms.formentity;
 
 /**
  * Created by nuwantha on 11/16/16.

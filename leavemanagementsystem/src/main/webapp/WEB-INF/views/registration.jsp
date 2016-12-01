@@ -14,6 +14,21 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
+
+    <!-- Website CSS style -->
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+
+    <!-- Website Font style -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
+    <!-- Google Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+
+
     <title>Create an account</title>
 
     <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
@@ -25,42 +40,211 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
+<style>
 
+    body, html {
+        height: 100%;
+        background-repeat: no-repeat;
+        background-color: #d3d3d3;
+        font-family: 'Oxygen', sans-serif;
+    }
+
+    .main {
+        margin-top: 10px;
+    }
+
+    h1.title {
+        font-size: 50px;
+        font-family: 'Passion One', cursive;
+        font-weight: 400;
+    }
+
+    hr {
+        width: 10%;
+        color: #fff;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        margin-bottom: 15px;
+    }
+
+    input,
+    input::-webkit-input-placeholder {
+        font-size: 11px;
+        padding-top: 3px;
+    }
+
+    .main-login {
+        background-color: #fff;
+        /* shadows and rounded borders */
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        border-radius: 2px;
+        -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+
+    }
+
+    .main-center {
+        margin-top: 30px;
+        margin: 0 auto;
+        max-width: 500px;
+        padding: 40px 40px;
+
+    }
+
+    .login-button {
+        margin-top: 5px;
+    }
+
+    table {
+        margin: auto;
+    }
+
+    .container {
+        padding: auto;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .role-select {
+        margin: auto;
+
+    }
+</style>
 <body>
+
+
+    <div id="nav">
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Leave Notifier</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li ><a href="../home">Home</a></li>
+                    <li ><a href="../leave">Leave</a></li>
+                    <li ><a id="alluserleaves">Company Leave Analyzing</a></li>
+                    <li class="active"><a href="../registration">User registration</a></li>
+                </ul>
+                <script type="text/javascript">
+                    let year = new Date().getFullYear();
+                    document.getElementById("alluserleaves").href="../users/graph/"+year;
+                </script>
+                <ul class="nav navbar-nav navbar-right">
+                    <c:if test="${pageContext.request.userPrincipal.name != null}">
+                        <form id="logoutForm" method="POST" action="${contextPath}/logout">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        </form>
+                        <li><a  id="profileData" style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
+                        <li><a  onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span> Sign Out</a></li>
+                    </c:if>
+                    <script type="text/javascript">
+
+                        let id='${userId}';
+                        document.getElementById("profileData").href="../users/"+id+"/"+year+"/graph";
+                    </script>
+
+            </ul>
+        </div>
+    </nav>
+
+</div>
+
 
 <div class="container">
 
-    <form:form method="POST" modelAttribute="userForm" class="form-signin">
-        <h2 class="form-signin-heading">Create your account</h2>
-        <spring:bind path="username">
-            <div class="form-group ${status.error ? 'has-error' : ''}">
-                <form:input type="text" path="username" class="form-control" placeholder="Username"
-                            autofocus="true"></form:input>
-                <form:errors path="username"></form:errors>
+
+    <div class="row main">
+        <div class="panel-heading">
+            <div class="panel-title text-center">
+                <h1 class="title">User Registration</h1>
+                <hr/>
             </div>
-        </spring:bind>
+        </div>
+        <div class="main-login main-center">
 
-        <spring:bind path="password">
-            <div class="form-group ${status.error ? 'has-error' : ''}">
-                <form:input type="password" path="password" class="form-control" placeholder="Password"></form:input>
-                <form:errors path="password"></form:errors>
-            </div>
-        </spring:bind>
 
-        <spring:bind path="email">
-            <div class="form-group ${status.error ? 'has-error' : ''}">
-                <form:input type="password" path="email" class="form-control"
-                            placeholder="Confirm your password"></form:input>
-                <form:errors path="email"></form:errors>
-            </div>
-        </spring:bind>
+            <form:form method="POST" modelAttribute="userForm" class="from-horizontal">
+                <div class="form-group">
+                    <label class="cols-sm-2 control-label">User Name</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
-    </form:form>
 
+                            <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+
+                            <spring:bind path="userName">
+                                <div class="form-group ${status.error ? 'has-error' : ''}">
+                                    <form:input type="text" path="userName" class="form-control" placeholder="Username"
+                                                autofocus="true"></form:input>
+                                    <form:errors path="userName"></form:errors>
+                                </div>
+                            </spring:bind>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="cols-sm-2 control-label">Your Email</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                            <spring:bind path="email">
+                                <div class="form-group ${status.error ? 'has-error' : ''}">
+                                    <form:input type="email" path="email" class="form-control"
+                                                placeholder="Enter User Email"></form:input>
+
+                                    <form:errors path="email"></form:errors>
+
+                                </div>
+                            </spring:bind>
+
+                            <label class="error"> ${errorName} </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="cols-sm-2 control-label">User Role</label>
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                            <form:select placeholder="Select Your Role" path="role" style="height: 100%;width: 100%">
+
+                                <form:option value="ROLE_USER"/>
+                                <form:option value="ROLE_ADMIN"/>
+
+                            </form:select>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="form-group ">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+
+            </form:form>
+
+
+        </div>
+    </div>
 </div>
 <!-- /container -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="${contextPath}/resources/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="assets/js/bootstrap.js"></script>
 </body>
 </html>
+

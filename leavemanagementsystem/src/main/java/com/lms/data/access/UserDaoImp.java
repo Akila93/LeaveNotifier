@@ -24,12 +24,11 @@ public class UserDaoImp extends JdbcDaoSupport implements UserDao{
     }
 
     @Override
-    public void addNewUser(User user) {
+    public void createUserAccount(User user) {
         String sql = "INSERT INTO userh " +
-                "(userid, name) VALUES (?, ?)" ;
-        getJdbcTemplate().update(sql, new Object[]{
-                user.getUserId(), user.getUserName()
-        });
+                "(name,email,role) VALUES (?,?,?)" ;
+        getJdbcTemplate().update(sql,user.getUserName(),user.getEmail(),String.valueOf(user.getRole())
+        );
 
 
 
@@ -38,8 +37,8 @@ public class UserDaoImp extends JdbcDaoSupport implements UserDao{
     @Override
     public List<User> getAllUsers() {
         String sql="select * from userh";
-        List<User> userList= getJdbcTemplate().query(sql, new UserMapper());
-        return  userList;
+        return getJdbcTemplate().query(sql, new UserMapper());
+
     }
 
     @Override
@@ -53,6 +52,13 @@ public class UserDaoImp extends JdbcDaoSupport implements UserDao{
     public User getUserById(int id) {
         String sql="select * from userh where userid= ?";
         User user= (User) getJdbcTemplate().queryForObject(sql, new Object[]{id}, new UserMapper());
+        return user;
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        String sql="select * from userh where email= ?";
+        User user= (User) getJdbcTemplate().queryForObject(sql, new Object[]{email}, new UserMapper());
         return user;
     }
 

@@ -27,145 +27,164 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<style>
+<style type="text/css">
     .has-background-img  {
         background-image: url("http://193.87.95.148/openwrt/rpi_cross/rootfs/usr/share/images/desktop-base/login-background.svg");
         background-color: #cccccc;
         padding: 0%;
+
     }
-    .has-background-img-form  {
-        background-image: url("https://moltin.com/addons/shared_addons/themes/moltinTwo/img/bg6.svg");
-        background-color: #cccccc;
-        border-color: #3c3c3c;
-        color: white;
-        border-radius: 2%;
+    #my-signin2{
+        margin-left: 45%;
+        margin-right: 45%;
     }
+    .center-block {
+        padding-top: 90px;;
+    }
+
+
+    body {
+        padding-top: 90px;
+    }
+    .panel-login {
+        border-color: #ccc;
+        -webkit-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
+        -moz-box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 2px 3px 0px rgba(0,0,0,0.2);
+    }
+    .panel-login>.panel-heading {
+        color: #00415d;
+        background-color: #fff;
+        border-color: #fff;
+        text-align:center;
+    }
+    .panel-login>.panel-heading a{
+        text-decoration: none;
+        color: #666;
+        font-weight: bold;
+        font-size: 15px;
+        -webkit-transition: all 0.1s linear;
+        -moz-transition: all 0.1s linear;
+        transition: all 0.1s linear;
+    }
+    .panel-login>.panel-heading a.active{
+        color: #029f5b;
+        font-size: 18px;
+    }
+    .panel-login>.panel-heading hr{
+        margin-top: 10px;
+        margin-bottom: 0px;
+        clear: both;
+        border: 0;
+        height: 1px;
+        background-image: -webkit-linear-gradient(left,rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15),rgba(0, 0, 0, 0));
+        background-image: -moz-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+        background-image: -ms-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+        background-image: -o-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.15),rgba(0,0,0,0));
+    }
+    .panel-login input[type="text"],.panel-login input[type="email"],.panel-login input[type="password"] {
+        height: 45px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+        -webkit-transition: all 0.1s linear;
+        -moz-transition: all 0.1s linear;
+        transition: all 0.1s linear;
+    }
+    .panel-login input:hover,
+    .panel-login input:focus {
+        outline:none;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        border-color: #ccc;
+    }
+
+    .sign-in-btn{
+        margin: auto !important;
+    }
+
+
 </style>
+
 
 <body class="has-background-img">
 
+<div class="container center-block">
+    <div class="row" >
 
 
-<div class="container-fluid" >
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-login">
+                <div class="panel-heading">
+                    <div class="row">
 
-    <div id="nav" style="width: 100%">
-        <nav class="navbar navbar-inverse">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">Leave Notifier</a>
+                        <img src="https://files.graphiq.com/1081/media/images/t2/HRM_Enterprise_1339562.png" style="width:50%; height:50%">
+                        <h3>Welcome to HRMenterprise</h3>
+
+                        <h4>Please sign in with your google Account</h4>
+
+                    </div>
+                    <hr>
                 </div>
-                <ul class="nav navbar-nav navbar-right">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-sm-offset-3 sign-in-btn">
 
+                                            <div  id="my-signin2"></div>
 
-                </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
-        </nav>
-
-    </div>
-    <%--<form method="POST" action="${contextPath}/login" class="form-signin">--%>
-        <%--<h2 class="form-heading">Log in</h2>--%>
-
-        <%--<div class="form-group ${error != null ? 'has-error' : ''}">--%>
-
-            <%--<div class="row">--%>
-            <%--<div class="col-sm-3"></div>--%>
-            <%--<div class="col-sm-6 well has-background-img-form" style="padding: 2%">--%>
-                <%--<div class="row" style="padding: 2%">--%>
-                    <%--<span>${message}</span>--%>
-                <%--</div>--%>
-                <%--<div class="row" style="padding: 2%">--%>
-                    <%--<input id="username" name="username" type="text" class="form-control" placeholder="Username"--%>
-                                        <%--autofocus="true"/>--%>
-                <%--</div>--%>
-                <%--<div class="row" style="padding: 2%">--%>
-                    <%--<input id="password" name="password" type="password" class="form-control" placeholder="Password"/>--%>
-                <%--</div>--%>
-                <%--<div class="row" style="padding: 2%">--%>
-                    <%--<span>${error}</span>--%>
-                <%--</div>--%>
-                <%--<div class="row" style="padding: 2%">--%>
-                    <%--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>--%>
-                <%--</div>--%>
-                <%--<div class="row" style="padding: 2%">--%>
-                    <%--<button id="btnSubmit" class="btn btn-lg btn-primary btn-block" style="margin-left:25%;margin-right: 25%;width: 50%" type="submit">Log In</button>--%>
-                <%--</div>--%>
-                <%--<div class="row" style="padding: 2%">--%>
-                    <%--<h4 class="text-center"><a href="${contextPath}/registration">Create an account</a></h4>--%>
-                <%--</div>--%>
-
-                <%--</div>--%>
-            <%--<div class="col-sm-3"></div>--%>
-            <%--</div>--%>
-
-
-
-        <%--</div>--%>
-
-    <%--</form>--%>
-    <%--<script type="text/javascript">--%>
-        <%--let userName="";--%>
-        <%--let password="";--%>
-        <%--userName='${username}';--%>
-        <%--password='${password}';--%>
-        <%--//console.log("user",userName);--%>
-        <%--//console.log("password",password);--%>
-        <%--if(userName != ""&& password!="") {--%>
-            <%--document.getElementById("username").value = userName;--%>
-            <%--document.getElementById("password").value = password;--%>
-            <%--$('#btnSubmit').trigger('click');--%>
-        <%--}--%>
-    <%--</script>--%>
-    <style type="text/css">
-        #my-signin2{
-            margin-left: 45%;
-            margin-right: 45%;
-        }
-        .center {
-            margin:auto;!important;
-        }
-    </style>
-    <div class="row">
-        <div class="center">
-            <div id="my-signin2"></div>
         </div>
-
-        <script>
-            function onSuccess(googleUser) {
-                let id_token = googleUser.getAuthResponse().id_token;
-                let xhr = new XMLHttpRequest();
-                xhr.open('POST', 'http://localhost:9099/google-login');
-                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                xhr.onload = function() {
-                    console.log('Signed in as: ' + xhr.responseText+"\nLocation:"+xhr.getResponseHeader("Location"));
-
-                    window.location.assign(xhr.getResponseHeader("Location"));
-                };
-                xhr.send('idtoken=' + id_token);
-
-            }
-            function onFailure(error) {
-                console.log(error);
-            }
-            function renderButton() {
-                gapi.signin2.render('my-signin2', {
-                    'scope': 'profile email',
-                    'width': 240,
-                    'height': 50,
-                    'longtitle': true,
-                    'theme': 'dark',
-                    'onsuccess': onSuccess,
-                    'onfailure': onFailure
-                });
-            }
-        </script>
-
-
     </div>
-
-
 </div>
+
 <!-- /container -->
+
+<script type="application/javascript">
+    function onSuccess(googleUser) {
+        let id_token = googleUser.getAuthResponse().id_token;
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:9099/google-login');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+            console.log('Signed in as: ' + xhr.responseText+"\nLocation:"+xhr.getResponseHeader("Location"));
+            let user =xhr.getResponseHeader("User");
+            window.location.assign(xhr.getResponseHeader("Location"));
+        };
+        xhr.send('idtoken=' + id_token);
+
+    }
+    function onFailure(error) {
+        console.log(error);
+    }
+    function renderButton() {
+        gapi.signin2.render('my-signin2', {
+            'scope': 'profile email',
+            'width': 240,
+            'height': 50,
+            'longtitle': true,
+            'theme': 'dark',
+            'onsuccess': onSuccess,
+            'onfailure': onFailure
+        });
+    }
+</script>
+
+
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="${contextPath}/resources/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+

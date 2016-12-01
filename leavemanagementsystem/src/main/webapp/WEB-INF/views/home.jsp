@@ -61,7 +61,7 @@
     <meta charset="UTF-8">
     <title>Leave Notifier</title>
 </head>
-<body>
+<body style="background-color: #D2D4D8 ">
 
 <div id="nav">
     <nav class="navbar navbar-inverse">
@@ -73,8 +73,16 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Home</a></li>
                 <li><a href="../leave">Leave</a></li>
-                <li><a id="alluserleaves">User Leave Analyzing</a></li>
+                <li><a id="alluserleaves">Company Leave Analyzing</a></li>
+                <li ><a href="../registration">User registration</a></li>
             </ul>
+            <form:form class="navbar-form navbar-left" method="post" commandName="searchForm" action="../users/search">
+                <div class="form-group">
+                    <form:input type="date" class="form-control" placeholder="Type a year" name="year" path="year"/>
+                    <form:input type="text" class="form-control" placeholder="Search a name" name="name" path="name"/>
+                </div>
+                <form:button type="submit" class="btn btn-default">Submit</form:button>
+            </form:form>
             <script type="text/javascript">
                 let year = '${homeForm.date}';
                 year=year.substr(0,4);
@@ -85,9 +93,14 @@
                     <form id="logoutForm" method="POST" action="${contextPath}/logout">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     </form>
-                    <li><h6>${pageContext.request.userPrincipal.name}</h6></li>
+                    <li><a id="profileData" style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
                     <li><a  onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span> Sign Out</a></li>
                 </c:if>
+                <script type="text/javascript">
+
+                    let id='${userId}';
+                    document.getElementById("profileData").href="../users/"+id+"/"+year+"/graph";
+                </script>
 
             </ul>
         </div>
@@ -107,12 +120,21 @@
     </nav>
 
 </div>
-
+<style>
+    .wraper{
+        width: 100%;
+        height: 600px;
+        margin: auto;
+        border-radius: 0;
+        overflow: auto;
+        background-color: #FFFFFF;
+    }
+</style>
 <div class="container">
-    <div class="raw">
+    <div class="raw wraper">
 
         <%--style="border: solid;overflow: scroll;height: 500px;padding: 1%"--%>
-        <div class="col-sm-6">
+        <div class="col-sm-6" style="padding-top: 3%">
 
             <form:form action="../home" method="post" commandName="homeForm">
                 <div class="input-group">

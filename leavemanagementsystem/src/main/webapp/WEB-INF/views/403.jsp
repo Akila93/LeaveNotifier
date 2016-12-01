@@ -19,15 +19,32 @@
                 <a class="navbar-brand" href="#">Leave Notifier <small><spring:message code="home.page.title"/></small></a>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="../../"><span class="glyphicon glyphicon-off"></span> Sign Out</a></li>
+                <li><a  style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
             </ul>
         </div>
     </nav>
 
 </div>
 
-    <h1>SQL Exception has occurred </h1>
+<h1 style="text-align: center;color: red">access denied Exception has occurred </h1>
+<div class="row">
+    <div class="col-sm-4"></div>
+    <img class="col-sm-4" src="http://www.polyvore.com/cgi/img-thing?.out=jpg&size=l&tid=141000776"/>
+    <div class="col-sm-4"></div>
 </div>
+
+
+<div class="row" style="margin-top: 1%">
+    <div class="col-sm-4"></div>
+    <div class="btn btn-info col-sm-4" onclick="gotoLoginPage()">Return to login</div>
+    <div class="col-sm-4"></div>
+</div>
+
+<script>
+    function gotoLoginPage(){
+        window.location.assign("http://localhost:9099/login");
+    }
+</script>
 </body>
 <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
 </html>

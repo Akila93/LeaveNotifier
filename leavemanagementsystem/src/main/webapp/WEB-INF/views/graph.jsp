@@ -125,7 +125,7 @@
     <title>Leave Analyze</title>
 
 </head>
-    <body>
+    <body style="background-color: #CDD4D5">
 
         <div id="nav">
             <nav class="navbar navbar-inverse">
@@ -136,7 +136,8 @@
                     <ul class="nav navbar-nav">
                         <li ><a href="../../../home">Home</a></li>
                         <li><a href="../../../leave">Leave</a></li>
-                        <li><a id="alluserleaves">User Leave Analyzing</a></li>
+                        <li><a id="alluserleaves">Company Leave Analyzing</a></li>
+                        <li ><a href="../../../registration">User registration</a></li>
                     </ul>
                     <script type="text/javascript">
                         ///users/1/2016/graph
@@ -148,10 +149,14 @@
                             <form id="logoutForm" method="POST" action="${contextPath}/logout">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             </form>
-                            <li><h6>${pageContext.request.userPrincipal.name}</h6></li>
+                            <li><a  id="profileData" style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
                             <li><a  onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span> Sign Out</a></li>
                         </c:if>
+                        <script type="text/javascript">
 
+                            let id='${userId}';
+                            document.getElementById("profileData").href="../../../../users/"+id+"/"+year+"/graph";
+                        </script>
                     </ul>
                 </div>
             </nav>
@@ -160,7 +165,8 @@
 
 
          <div class="fluid-container">
-             <div class="row" style="margin: 5%;padding:2%;border: solid">
+             <div style="background-color: #FFFFFF;margin: 5%">
+             <div class="row" style="padding:2%">
                  <div class="col-sm-9" style="overflow: auto">
                      <div id="chart_div" style="width: 900px; height: 500px"></div>
                  </div>
@@ -182,7 +188,8 @@
                  </div>
              </div>
             <div class="row">
-                <div id="calendar_basic" style="overflow: auto;border: solid;margin: 5%;padding: 1%"></div>
+                <div id="calendar_basic" style="overflow: auto;padding: 1%"></div>
+            </div>
             </div>
          </div>
         <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>

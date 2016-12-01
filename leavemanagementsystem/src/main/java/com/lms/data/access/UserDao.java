@@ -8,9 +8,11 @@ import java.util.List;
  */
 public interface UserDao {
 
-    void addNewUser(User user);
-    List<User> getAllUsers();
+    void createUserAccount(User user);
+    List getAllUsers();
     User getUserByName(String name);
     User getUserById(int id);
+    User getUserByEmail(String email);
     int getUserCount();
+
 }

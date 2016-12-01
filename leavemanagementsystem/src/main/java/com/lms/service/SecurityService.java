@@ -6,6 +6,6 @@ package com.lms.service;
 public interface SecurityService {
 
     String findLoggedInUsername();
-    void autologin(String username,String email);
+    String autologin(String username,String email);
 
 }

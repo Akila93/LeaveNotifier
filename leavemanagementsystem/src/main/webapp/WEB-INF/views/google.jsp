@@ -19,6 +19,7 @@
                 <a class="navbar-brand" href="#">Leave Notifier <small><spring:message code="home.page.title"/></small></a>
             </div>
             <ul class="nav navbar-nav navbar-right">
+                <li><a  style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
                 <li><a href="../../"><span class="glyphicon glyphicon-off"></span> Sign Out</a></li>
             </ul>
         </div>

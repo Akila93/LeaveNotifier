@@ -3,8 +3,11 @@ CREATE DATABASE LMS;
 CONNECT LMS;
 
 CREATE TABLE USERH(
-  USERID INT PRIMARY KEY     NOT NULL,
-  NAME           TEXT    NOT NULL
+  USERID  BIGSERIAL PRIMARY KEY     NOT NULL,
+  NAME           TEXT    NOT NULL,
+  EMAIL  VARCHAR UNIQUE  NOT NULL,
+  ROLE VARCHAR NOT NULL
+
 );
 
 CREATE TABLE LEAVE(
@@ -18,28 +21,20 @@ CREATE TABLE LEAVE(
 
 );
 
-CREATE TABLE LOGINUSER(
-  USERNAME VARCHAR  PRIMARY KEY NOT NULL,
-  EMAIL  VARCHAR   NOT NULL
-);
+
+INSERT INTO USERH(name,email,role) VALUES ('nuwantha','nuwanthad@hsenidmobile.com','ROLE_ADMIN');
+INSERT INTO USERH(name,email,role) VALUES ('hameed','hameed@hsenidmobile.com','ROLE_USER');
+INSERT INTO USERH(name,email,role) VALUES ('root','root@hsenidmobile.com','User','ROLE_USER');
+INSERT INTO USERH(name,email,role) VALUES ('duncket','duncket@hsenidmobile.com','ROLE_USER');
+INSERT INTO USERH(name,email,role) VALUES ('ali','ali@hsenidmobile.com','ROLE_USER');
+INSERT INTO USERH(name,email,role) VALUES ('stroke','stroke@hsenidmobile.com','ROLE_USER');
+INSERT INTO USERH(name,email,role) VALUES ('bestrow','bestrow@hsenidmobile.com','ROLE_USER');
+INSERT INTO USERH(name,email,role) VALUES ('nuwantha','nuwanthad@hsenidmobile.com','ROLE_USER');
 
 
-INSERT INTO USERH VALUES ('001','cook');
-INSERT INTO USERH VALUES ('002','hameed');
-INSERT INTO USERH VALUES ('003','root');
-INSERT INTO USERH VALUES ('004','duncket');
-INSERT INTO USERH VALUES ('005','ali');
-INSERT INTO USERH VALUES ('006','stroke');
-INSERT INTO USERH VALUES ('007','bestrow');
-
-
-INSERT INTO LEAVE VALUES ('001','2016-10-01','full day','sick','');
-INSERT INTO LEAVE VALUES ('001','2016-10-02','full day','sick','');
-INSERT INTO LEAVE VALUES ('001','2016-10-10','full day','sick','');
-INSERT INTO LEAVE VALUES ('002','2016-10-01','first half','sick','');
-INSERT INTO LEAVE VALUES ('002','2016-10-21','second half','sick','');
-INSERT INTO LEAVE VALUES ('002','2016-10-25','second half','sick','');
-
-
-INSERT INTO LOGINUSER VALUES ('nuwantha','nuwantha.13@cse.mrt.ac.lk');
-INSERT INTO LOGINUSER VALUES ('akila','akilac.13@cse.mrt.ac.lk');
+INSERT INTO LEAVE VALUES ('3','2016-10-01','full day','sick','');
+INSERT INTO LEAVE VALUES ('3','2016-10-02','full day','sick','');
+INSERT INTO LEAVE VALUES ('3','2016-10-10','full day','sick','');
+INSERT INTO LEAVE VALUES ('2','2016-10-01','first half','sick','');
+INSERT INTO LEAVE VALUES ('2','2016-10-21','second half','sick','');
+INSERT INTO LEAVE VALUES ('2','2016-10-25','second half','sick','');

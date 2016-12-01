@@ -1,6 +1,4 @@
-package com.lms.entity;
-
-import java.util.Date;
+package com.lms.formentity;
 
 /**
  * Created by akila on 11/11/16.

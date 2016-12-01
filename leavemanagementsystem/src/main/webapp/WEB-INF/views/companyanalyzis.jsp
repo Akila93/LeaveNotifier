@@ -97,10 +97,21 @@
 
             var options = {
                 title: 'Leaves of month ${leaveMonth}',
-                vAxis: {title: 'Number of leaves'},
+                vAxis: {
+                    title: 'Number of leaves',
+
+                },
+                hAxis: {
+                    title: 'Number of Days',
+                    ticks: [5,10,15,20]
+                },
                 isStacked: true
             };
-
+            let listOfDays=[];
+            for(let i=1;i<=31;i++){
+                listOfDays.push(i);
+            }
+            options.hAxis.ticks=listOfDays;
             var chart = new google.visualization.SteppedAreaChart(document.getElementById('Stepped_basic'));
 
             chart.draw(data, options);
@@ -112,7 +123,7 @@
     <title>Leave Analyze</title>
 
 </head>
-<body>
+<body style="background-color: #CDD4D5">
 
 <div id="nav">
     <nav class="navbar navbar-inverse">
@@ -123,18 +134,23 @@
             <ul class="nav navbar-nav">
                 <li><a href="../../../home">Home</a></li>
                 <li><a href="../../../leave">Leave</a></li>
-                <li class="active"><a href="#">User Leave Analyzing</a></li>
+                <li class="active"><a href="#">Company Leave Analyzing</a></li>
+                <li ><a href="../../../registration">User registration</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <c:if test="${pageContext.request.userPrincipal.name != null}">
                     <form id="logoutForm" method="POST" action="${contextPath}/logout">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     </form>
-                    <li><h6>${pageContext.request.userPrincipal.name}</h6></li>
+                    <li><a  id="profileData" style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
                     <li><a onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span>
                         Sign Out</a></li>
                 </c:if>
-
+                <script type="text/javascript">
+                    let year = '${leaveYear}'
+                    let id='${userId}';
+                    document.getElementById("profileData").href="../../../users/"+id+"/"+year+"/graph";
+                </script>
             </ul>
         </div>
     </nav>
@@ -143,7 +159,8 @@
 
 
 <div class="fluid-container">
-    <div class="row" style="margin: 5%;padding:2%;border: solid">
+    <div style="background-color: #FFFFFF;margin: 5%">
+    <div class="row" style="padding:2%">
         <div class="col-sm-9" style="overflow: auto">
             <div id="chart_div" style="width: 900px; height: 500px"></div>
         </div>
@@ -164,9 +181,10 @@
             </table>
         </div>
     </div>
-    <div class="row" style="margin: 5%;padding:2%;border: solid">
+    <div class="row" style="padding:2%">
         <div id="Stepped_basic"></div>
     </div>
+        </div>
 </div>
 <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
 </body>
