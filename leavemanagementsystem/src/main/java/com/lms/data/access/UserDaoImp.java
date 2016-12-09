@@ -69,4 +69,15 @@ public class UserDaoImp extends JdbcDaoSupport implements UserDao{
         return  epmloyeeCount;
     }
 
+    @Override
+    public boolean isUserHasAccount(String userName) {
+        String sql="select count( *) from userh where name=?";
+        int count = getJdbcTemplate().queryForObject(sql, Integer.class,userName);
+        if(count==0) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
 }

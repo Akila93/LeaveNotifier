@@ -6,10 +6,12 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/ico" href="/resources/images/logo-tab.ico" sizes="16x16">
     <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
     <link rel="stylesheet" href="/resources/css/bootstrap-theme.css"/>
     <%--<script src="https://apis.google.com/js/platform.js" async defer></script>--%>
-    <meta name="google-signin-client_id" content="862712159345-ti9la1n9c7vtj95516st4q3nf4kt68rc.apps.googleusercontent.com">
+    <meta name="google-signin-client_id"
+          content="862712159345-ti9la1n9c7vtj95516st4q3nf4kt68rc.apps.googleusercontent.com">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script type="text/javascript">
@@ -61,7 +63,7 @@
     <meta charset="UTF-8">
     <title>Leave Notifier</title>
 </head>
-<body style="background-color: #D2D4D8 ">
+<body style="background-color: #d3d3d3 ">
 
 <div id="nav">
     <nav class="navbar navbar-inverse">
@@ -74,39 +76,65 @@
                 <li class="active"><a href="#">Home</a></li>
                 <li><a href="../leave">Leave</a></li>
                 <li><a id="alluserleaves">Company Leave Analyzing</a></li>
-                <li ><a href="../registration">User registration</a></li>
+                <li><a id="registration" href="../registration">User registration</a></li>
+                <li><a id="bulkLeave" href="../bulk-leave">Bulk leave</a></li>
             </ul>
-            <form:form class="navbar-form navbar-left" method="post" commandName="searchForm" action="../users/search">
+            <form:form class="navbar-form navbar-left" method="post" commandName="searchForm" action="../users/search"
+                       id="search_form">
                 <div class="form-group">
-                    <form:input type="date" class="form-control" placeholder="Type a year" name="year" path="year"/>
+
+                    <form:select id="year" class="form-control" placeholder="Type a year" name="year" path="year">
+                        <script>
+                            var myDate = new Date();
+                            var year1 = myDate.getFullYear();
+                            for (var i = year1; i > 2000; i--) {
+                                document.write('<option value="' + i + '">' + i + '</option>');
+                            }
+                        </script>
+                    </form:select>
+
+                        <%--<form:input type="date" class="form-control" placeholder="Type a year" name="year" path="year"/>--%>
+                        <%----%>
+
+
                     <form:input type="text" class="form-control" placeholder="Search a name" name="name" path="name"/>
                 </div>
                 <form:button type="submit" class="btn btn-default">Submit</form:button>
             </form:form>
             <script type="text/javascript">
                 let year = '${homeForm.date}';
-                year=year.substr(0,4);
-                document.getElementById("alluserleaves").href="../users/graph/"+year;
+                let role = '${userRole}';
+                //console.log(typeof role,role.indexOf("ROLE_ADMIN"),"ROLE_USER".length);
+                year = year.substr(0, 4);
+                document.getElementById("alluserleaves").href = "../users/graph/" + year;
+                if (role.indexOf("ROLE_ADMIN")) {
+                    document.getElementById("search_form").style.visibility = "hidden";
+                    document.getElementById("alluserleaves").style.visibility = "hidden";
+                    document.getElementById("registration").style.visibility = "hidden";
+                    document.getElementById("bulkLeave").style.visibility = "hidden";
+                }
             </script>
             <ul class="nav navbar-nav navbar-right">
                 <c:if test="${pageContext.request.userPrincipal.name != null}">
                     <form id="logoutForm" method="POST" action="${contextPath}/logout">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     </form>
-                    <li><a id="profileData" style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
-                    <li><a  onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span> Sign Out</a></li>
+                    <li><a id="profileData"
+                           style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
+                    <li><a onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span>
+                        Sign Out</a></li>
                 </c:if>
                 <script type="text/javascript">
 
-                    let id='${userId}';
-                    document.getElementById("profileData").href="../users/"+id+"/"+year+"/graph";
+                    let id = '${userId}';
+                    document.getElementById("profileData").href = "../users/" + id + "/" + year + "/graph";
                 </script>
 
             </ul>
         </div>
         <script>
             function onLoad() {
-                gapi.load('auth2', function() {
+                gapi.load('auth2', function () {
                     gapi.auth2.init();
                 });
             }
@@ -121,7 +149,12 @@
 
 </div>
 <style>
-    .wraper{
+    body {
+        font-family: Helvetica Neue;
+    !important;
+    }
+
+    .wraper {
         width: 100%;
         height: 600px;
         margin: auto;
@@ -132,53 +165,90 @@
 </style>
 <div class="container">
     <div class="raw wraper">
-
-        <%--style="border: solid;overflow: scroll;height: 500px;padding: 1%"--%>
         <div class="col-sm-6" style="padding-top: 3%">
-
-            <form:form action="../home" method="post" commandName="homeForm">
-                <div class="input-group">
-                    <span class="input-group-addon" id="sizing-addon1">select a date to view leaves</span>
-                    <form:input class="form-control" path="date" placeholder="today" type="date"/>
-                    <span class="input-group-btn">
+            <div id="leave_search_form">
+                <%
+                    String value = (String) request.getAttribute("userRole");
+                    if (value.contains("ROLE_ADMIN")) {
+                %>
+                <form:form acti1on="../home" method="post" commandName="homeForm">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="sizing-addon1">Select A Date To View Leaves</span>
+                        <form:input class="form-control" path="date" placeholder="today" type="date"/>
+                        <span class="input-group-btn">
                         <form:button type="submit" class="btn btn-default">Reload</form:button>
                     </span>
-                </div>
-            </form:form>
-            <script type="text/javascript">
-                //        check whether list of leaves empty then table should disapper
-            </script>
+                    </div>
+                </form:form>
+                <%
+                    }
+                %>
+            </div>
 
-            <table class="table table-bordered">
-                <thead>
-                <th>UserName</th>
-                <th>LeaveType</th>
-                <th>Reason</th>
-                <th>Comment</th>
-                </thead>
-                <tbody>
-                <script type="text/javascript">
-                    let year='';
-                    let url='';
-                </script>
-                <c:forEach var="leave" items="${leaveList}">
-                    <tr>
-                        <td><a id='${leave.name}'
-                            <%--href="../users/${leave.userId}/<%=year%>/graph"--%>
-                        >${leave.name}</a></td>
-                        <td>${leave.leaveType}</td>
-                        <td>${leave.reasonToLeave}</td>
-                        <td>${leave.comment}</td>
-                    </tr>
+
+            <div id="tb_container">
+                <table class="table table-bordered" id="tableOfLeaves">
+                    <thead>
+                    <th>UserName</th>
+                    <th>LeaveType</th>
+                    <th>Reason</th>
+                    <th>Comment</th>
+                    </thead>
+                    <tbody>
                     <script type="text/javascript">
-                        year = '${homeForm.getDate()}';
-                        year = year.substr(0, 4);
-                        url = '../users/${leave.userId}/' + year + '/graph';
-                        document.getElementById('${leave.name}').href = url;
+                        //let year='';
+                        let url = '';
                     </script>
+                    <c:forEach var="leave" items="${leaveList}">
+                        <tr>
+                            <td>
+                                <%
+                                    String roleofuser = (String) request.getAttribute("userRole");
+                                    if (roleofuser.contains("ROLE_ADMIN")) {
+                                %>
+                                <a id='${leave.name}'>${leave.name}</a>
+                                <%
+                                } else {
+                                %>
+                                    ${leave.name}
+                                <%
+                                    }
+                                %>
+                            </td>
+                            <td>${leave.leaveType}</td>
+                            <td>${leave.reasonToLeave}</td>
+                            <td>${leave.comment}</td>
+                        </tr>
+                        <script type="text/javascript">
+                            year = '${homeForm.getDate()}';
+                            year = year.substr(0, 4);
+                            url = '../users/${leave.userId}/' + year + '/graph';
+                            document.getElementById('${leave.name}').href = url;
+                        </script>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <script type="text/javascript">
+                let leave_List = [];
+                let leave = {};
+                <c:forEach items="${leaveList}" var="leave" varStatus="status">
+                leave = {};
+                leave["userId"] = "${leave.userId}";
+                leave["name"] = "${leave.name}";
+                leave["leaveDate"] = "${leave.leaveDate}";
+                leave["leaveType"] = "${leave.leaveType}";
+                leave["reasonToLeave"] = "${leave.reasonToLeave}";
+                leave["comment"] = "${leave.comment}";
+                leave_List.push(leave);
                 </c:forEach>
-                </tbody>
-            </table>
+                if (leave_List.length == 0) {
+                    document.getElementById("tableOfLeaves").style.visibility = "hidden";
+                    document.getElementById("tb_container").innerHTML = "no leaves has been added!";
+                }
+            </script>
         </div>
         <%--style="border: solid;overflow: scroll;height: 500px;padding: 1%"   --%>
         <div class="col-sm-6">

@@ -2,6 +2,7 @@ package com.lms.controller;
 
 import com.lms.common.Common;
 import com.lms.formentity.Chart;
+import com.lms.formentity.Graph;
 import com.lms.formentity.KeyValue;
 import com.lms.entity.Leave;
 import com.lms.entity.User;
@@ -9,6 +10,7 @@ import com.lms.formentity.SearchForm;
 import com.lms.service.LeaveService;
 import com.lms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,21 +37,26 @@ public class UserController {
     @Autowired
     LeaveService leaveService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping("/users/search")
     public String findUser(Model model, HttpServletRequest request,Principal principal){
 
+        String name = request.getParameter("name");
         //////check user role and if he/she is not an admin redirect to home/////
-        User user = userService.getUserByName(principal.getName());
-        if(user.getRole()!="ROLE_ADMIN"){
-            return "redirect ../home";
+        User user = null;
+        if(userService.isUserHasAccount(name)){
+            user = userService.getUserByName(name);
+        }
+
+        if(user==null || !userService.getUserByName(principal.getName()).getRole().contains("ROLE_ADMIN")){
+            return "redirect: ../../../home";
         }
 
         //this should be in services///////////////////
         LocalDateTime now = LocalDateTime.now();
         int year = now.getYear();
         try {
-            Integer.parseInt(request.getParameter("year").substring(0,4));
-            year = Integer.parseInt(request.getParameter("year").substring(0,4));
+            year = Integer.parseInt(request.getParameter("year"));
         }catch (Exception e){
             System.out.println("well well:");
         }
@@ -65,7 +72,7 @@ public class UserController {
                                              @PathVariable("year") int year, Principal principal){
 
         ArrayList<User> allUsers = (ArrayList<User>) userService.getAllUsers();
-        List<KeyValue> leaveListOfYear = leaveService.getLeaveListOfYear(year);
+        List<Graph> leaveListOfYear = leaveService.getLeaveListOfYear(year);
         ArrayList<Chart> monthlyUserLeaveChart = leaveService.getMonthlyUserLeaveChart(year, Common.convertMonthToInt(month));
         Integer userId=null;
         if(principal!=null){
@@ -92,19 +99,42 @@ public class UserController {
         return "redirect:../../users/graph/"+year+"/January";
     }
 
+//    @RequestMapping("/users/current-user/{year}/graph")
+//    public String plotGraphForCurrentUser(Model model, @RequestParam(value="id",required = true) int id, @PathVariable("year") int year,Principal principal){
+//        List leaveListOfYear = leaveService.getLeaveListOfYear(year, id);
+//        User user = userService.getUserById(id);
+//        List<Leave> leaveOfYear = leaveService.getLeaveOfYear(year, id);
+//        Integer userId=null;
+//        if(principal!=null){
+//            userId=userService.getUserByName(principal.getName()).getUserId();
+//            model.addAttribute("userId",userId);
+//        }
+//        model.addAttribute("leaveYear",year);
+//        model.addAttribute("leaveListOfYear",leaveListOfYear);
+//        model.addAttribute("userName",user.getUserName());
+//        model.addAttribute("leavesOfYear",leaveOfYear);
+//        return "graph";
+//    }
+
     @RequestMapping("/users/{id}/{year}/graph")
     public String plotGraphs(Model model, @PathVariable("id") int id, @PathVariable("year") int year,Principal principal){
-        List leaveListOfYear = leaveService.getLeaveListOfYear(year, id);
-        User user = userService.getUserById(id);
+        User user = userService.getUserByName(principal.getName());
+        if(!user.getRole().equals("ROLE_ADMIN") && id!=user.getUserId()){
+            return "redirect: ../../../../../403";
+        }
+        List<Graph> leaveListOfYear = leaveService.getLeaveListOfYear(year, id);
         List<Leave> leaveOfYear = leaveService.getLeaveOfYear(year, id);
         Integer userId=null;
         if(principal!=null){
             userId=userService.getUserByName(principal.getName()).getUserId();
             model.addAttribute("userId",userId);
         }
+        model.addAttribute("userRole",userService.getUserByName(principal.getName()).getRole());
+        User leaveUser = userService.getUserById(id);
         model.addAttribute("leaveYear",year);
         model.addAttribute("leaveListOfYear",leaveListOfYear);
         model.addAttribute("userName",user.getUserName());
+        model.addAttribute("leaveUserName",leaveUser.getUserName());
         model.addAttribute("leavesOfYear",leaveOfYear);
         return "graph";
     }

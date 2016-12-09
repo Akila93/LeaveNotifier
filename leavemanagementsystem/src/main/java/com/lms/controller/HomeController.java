@@ -49,8 +49,8 @@ public class HomeController {
             leaveList = leaveService.getAllLeaves();
         //}
         ///////////////
+        model.addAttribute("userRole",userService.getUserByName(principal.getName()).getRole());
         model.addAttribute("searchForm",new SearchForm());
-        System.out.println("user name"+principal.getName());
         HomeForm homeForm=new HomeForm();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String format = simpleDateFormat.format(new Date());
@@ -78,10 +78,12 @@ public class HomeController {
         System.out.println(homeForm.getDate());
         HomeForm form=new HomeForm();
         form.setDate(homeForm.getDate());
+        //System.out.println("role:"+principal.getName());
+        model.addAttribute("userRole",userService.getUserByName(principal.getName()).getRole());
         model.addAttribute("searchForm",new SearchForm());
         model.addAttribute("userCount",userService.getUserCount());
         model.addAttribute("homeForm",form);
-        model.addAttribute("leaveList",leaveService.getLeavesOfDay(homeForm.getDate()));
+        model.addAttribute("leaveList",leaveService.getLeavesOfDay(homeForm.getDate()));//allow admin only
         return "home";
     }
 

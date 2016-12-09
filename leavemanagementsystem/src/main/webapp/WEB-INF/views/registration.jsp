@@ -7,6 +7,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/ico" href="/resources/images/logo-tab.ico" sizes="16x16">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,13 +41,31 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
+
 <style>
+
+    select {
+        /*-webkit-border-radius:4px;*/
+        /*-moz-border-radius:4px;*/
+        /*border-radius:4px;*/
+        /*-webkit-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;*/
+        /*-moz-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;*/
+        /*box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;*/
+        background: #FFFFFF;
+        color:black;
+        outline:none;
+        display: inline-block;
+        -webkit-appearance:none;
+        -moz-appearance:none;
+        appearance:none;
+        cursor:pointer;
+    }
 
     body, html {
         height: 100%;
         background-repeat: no-repeat;
         background-color: #d3d3d3;
-        font-family: 'Oxygen', sans-serif;
+        font-family:Helvetica Neue;!important;
     }
 
     .main {
@@ -116,7 +135,22 @@
         margin: auto;
 
     }
+    .error{
+        color: #b92c28;
+    }
 </style>
+
+
+<%--<script type="text/javascript">--%>
+
+    <%--let role = '${userRole}';--%>
+    <%--console.log("role is ", role);--%>
+    <%--if(role.indexOf("ROLE_ADMIN")){--%>
+        <%--document.getElementById("username-form-group").style.visibility = "hidden";--%>
+    <%--}--%>
+
+<%--</script>--%>
+
 <body>
 
 
@@ -131,6 +165,8 @@
                     <li ><a href="../leave">Leave</a></li>
                     <li ><a id="alluserleaves">Company Leave Analyzing</a></li>
                     <li class="active"><a href="../registration">User registration</a></li>
+                    <li><a id="bulkLeave" href="../bulk-leave">Bulk leave</a></li>
+
                 </ul>
                 <script type="text/javascript">
                     let year = new Date().getFullYear();
@@ -169,9 +205,8 @@
         </div>
         <div class="main-login main-center">
 
-
-            <form:form method="POST" modelAttribute="userForm" class="from-horizontal">
-                <div class="form-group">
+           <form:form method="POST" modelAttribute="userForm" class="from-horizontal">
+               <div class="form-group">
                     <label class="cols-sm-2 control-label">User Name</label>
                     <div class="cols-sm-10">
                         <div class="input-group">
@@ -205,8 +240,10 @@
                                 </div>
                             </spring:bind>
 
-                            <label class="error"> ${errorName} </label>
+
                         </div>
+                        <label class="error"> ${errorName} </label>
+
                     </div>
                 </div>
 

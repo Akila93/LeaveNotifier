@@ -14,5 +14,6 @@ public interface UserDao {
     User getUserById(int id);
     User getUserByEmail(String email);
     int getUserCount();
+    boolean isUserHasAccount(String userName);
 
 }

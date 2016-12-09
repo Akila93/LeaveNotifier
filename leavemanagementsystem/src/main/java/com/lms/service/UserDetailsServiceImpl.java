@@ -15,17 +15,18 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userService.getUserByName(username);
+        User user = getUserService().getUserByName(username);
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getEmail(), AuthorityUtils.createAuthorityList(user.getRole()));
 
     }
 
 
-
-
+    public UserService getUserService() {
+        return userService;
+    }
 }

@@ -7,7 +7,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-
+    <link rel="icon" type="image/ico" href="/resources/images/logo-tab.ico" sizes="16x16">
     <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
     <link rel="stylesheet" href="/resources/css/bootstrap-theme.css"/>
     <meta name="google-signin-client_id"
@@ -26,6 +26,12 @@
             });
         }
     </script>
+    <style>
+        body {
+            font-family: Helvetica Neue;
+        !important;
+        }
+    </style>
     <script type="text/css">
         #nav {
             background-color: green;
@@ -39,15 +45,19 @@
 
         function drawVisualization() {
 
-            let list = [['Month', 'Leave']];
+            let list = [['Month', 'Fist Half','Second Half','Full Day']];
             let item = [];
-            let month, value;
+            let month,firsthalf,secondhalf,fullday;
             <c:forEach items='${leaveListOfYear}' var="entry1">
             item = [];
             month = '${entry1.key}';
-            value = '${entry1.value}';
+            firsthalf = '${entry1.firstHalf}';
+            secondhalf='${entry1.secondHalf}';
+            fullday=${entry1.fullDay}
             item.push(month);
-            item.push(parseInt(value));
+            item.push(parseInt(firsthalf));
+            item.push(parseInt(secondhalf));
+            item.push(parseInt(fullday));
             list.push(item);
             </c:forEach>
             var data = google.visualization.arrayToDataTable(list);
@@ -57,6 +67,8 @@
                 vAxis: {title: 'Number Of Leaves'},
                 hAxis: {title: 'Month'},
                 seriesType: 'bars',
+                series: {3: {type: 'line'}}
+
 
             };
 
@@ -103,15 +115,15 @@
                 },
                 hAxis: {
                     title: 'Number of Days',
-                    ticks: [5,10,15,20]
+                    ticks: [5, 10, 15, 20]
                 },
                 isStacked: true
             };
-            let listOfDays=[];
-            for(let i=1;i<=31;i++){
+            let listOfDays = [];
+            for (let i = 1; i <= 31; i++) {
                 listOfDays.push(i);
             }
-            options.hAxis.ticks=listOfDays;
+            options.hAxis.ticks = listOfDays;
             var chart = new google.visualization.SteppedAreaChart(document.getElementById('Stepped_basic'));
 
             chart.draw(data, options);
@@ -123,7 +135,7 @@
     <title>Leave Analyze</title>
 
 </head>
-<body style="background-color: #CDD4D5">
+<body style="background-color: #d3d3d3">
 
 <div id="nav">
     <nav class="navbar navbar-inverse">
@@ -135,21 +147,23 @@
                 <li><a href="../../../home">Home</a></li>
                 <li><a href="../../../leave">Leave</a></li>
                 <li class="active"><a href="#">Company Leave Analyzing</a></li>
-                <li ><a href="../../../registration">User registration</a></li>
+                <li><a href="../../../registration">User registration</a></li>
+                <li><a id="bulkLeave" href="../../../bulk-leave">Bulk leave</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <c:if test="${pageContext.request.userPrincipal.name != null}">
                     <form id="logoutForm" method="POST" action="${contextPath}/logout">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     </form>
-                    <li><a  id="profileData" style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
+                    <li><a id="profileData"
+                           style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
                     <li><a onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span>
                         Sign Out</a></li>
                 </c:if>
                 <script type="text/javascript">
                     let year = '${leaveYear}'
-                    let id='${userId}';
-                    document.getElementById("profileData").href="../../../users/"+id+"/"+year+"/graph";
+                    let id = '${userId}';
+                    document.getElementById("profileData").href = "../../../users/" + id + "/" + year + "/graph";
                 </script>
             </ul>
         </div>
@@ -160,31 +174,64 @@
 
 <div class="fluid-container">
     <div style="background-color: #FFFFFF;margin: 5%">
-    <div class="row" style="padding:2%">
-        <div class="col-sm-9" style="overflow: auto">
-            <div id="chart_div" style="width: 900px; height: 500px"></div>
+
+
+        <div style="padding:2%">  Year :  <input type="number" name="yearSelect" id="yearSelect"/>
+            <button class="button" onclick="OnSet()">Set</button>
+            <script type="application/javascript">
+                function OnSet() {
+                    let value_for_year = document.getElementById("yearSelect").value;
+                    console.log(value_for_year, "value_for_year");
+                    if (value_for_year.length != 4) {
+                        return;
+                    }
+                    //value_for_year=(String)value_for_year;
+                    let onSetUrl = "http://localhost:9099/users/graph/" + value_for_year;
+                    window.location.assign(onSetUrl);
+                }
+
+            </script>
         </div>
-        <div class="col-sm-3" style="overflow: auto">
-            <table class="table table-bordered">
-                <thead>
-                <th>Month</th>
-                <th>Number Of Leave</th>
-                </thead>
-                <tbody>
-                <c:forEach var="entry" items="${leaveListOfYear}">
-                    <tr>
-                        <td><a href="../../../users/graph/${leaveYear}/${entry.month}">${entry.month}</a></td>
-                        <td>${entry.value}</td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
+
+
+        <div class="row" style="padding:2%">
+            <div class="col-sm-7" >
+                <div id="chart_div"></div>
+                <div id="Stepped_basic" style="height: 300px"></div>
+            </div>
+            <div class="col-sm-2">
+
+            </div>
+            <div class="col-sm-3" style="overflow: auto">
+                <table class="table table-bordered">
+                    <thead>
+
+                        <th>Month</th>
+                        <th>First Half</th>
+                        <th>Second Half</th>
+                        <th>Full Day</th>
+
+                    </thead>
+                    <tbody>
+                    <c:forEach var="entry" items="${leaveListOfYear}">
+                        <tr>
+                            <td><a href="../../../users/graph/${leaveYear}/${entry.month}">
+                            ${entry.month}</a>
+                            </td>
+                            <td>${entry.firstHalf}</td>
+                            <td>${entry.secondHalf}</td>
+                            <td>${entry.fullDay}</td>
+
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
         </div>
+        <%--<div class="row" style="padding:2%;overflow: auto">--%>
+
+        <%--</div>--%>
     </div>
-    <div class="row" style="padding:2%">
-        <div id="Stepped_basic"></div>
-    </div>
-        </div>
 </div>
 <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
 </body>

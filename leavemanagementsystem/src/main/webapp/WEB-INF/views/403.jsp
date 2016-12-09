@@ -5,12 +5,18 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/ico" href="/resources/images/logo-tab.ico" sizes="16x16">
     <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
     <link rel="stylesheet" href="/resources/css/bootstrap-theme.css"/>
     <meta name="google-signin-client_id" content="862712159345-ti9la1n9c7vtj95516st4q3nf4kt68rc.apps.googleusercontent.com">
     <meta charset="UTF-8">
     <title>Leave Notifier</title>
 </head>
+<style>
+    body{
+        font-family:Helvetica Neue;!important;
+    }
+</style>
 <body>
 <div id="nav">
     <nav class="navbar navbar-inverse">
@@ -26,23 +32,31 @@
 
 </div>
 
-<h1 style="text-align: center;color: red">access denied Exception has occurred </h1>
-<div class="row">
+<%--<h1 style="text-align: center;color: red"> Access Denied </h1>--%>
+<div class="row" style="margin-top: 7%;margin-bottom: 5%" >
     <div class="col-sm-4"></div>
-    <img class="col-sm-4" src="http://www.polyvore.com/cgi/img-thing?.out=jpg&size=l&tid=141000776"/>
+
+    <img class="col-sm-4" src="../resources/images/access-denied3.jpg"/>
+
+
     <div class="col-sm-4"></div>
 </div>
 
 
 <div class="row" style="margin-top: 1%">
     <div class="col-sm-4"></div>
-    <div class="btn btn-info col-sm-4" onclick="gotoLoginPage()">Return to login</div>
+    <div class="btn btn-info col-sm-4" onclick="returnToPage()">Return to previous page</div>
     <div class="col-sm-4"></div>
 </div>
 
 <script>
-    function gotoLoginPage(){
-        window.location.assign("http://localhost:9099/login");
+    function returnToPage(){
+        if('${pageContext.request.userPrincipal.name}'){
+            window.location.assign("http://localhost:9099/home");
+        }else{
+            window.location.assign("http://localhost:9099/login");
+        }
+
     }
 </script>
 </body>

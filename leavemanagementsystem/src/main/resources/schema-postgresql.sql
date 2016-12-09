@@ -30,6 +30,7 @@ INSERT INTO USERH(name,email,role) VALUES ('ali','ali@hsenidmobile.com','ROLE_US
 INSERT INTO USERH(name,email,role) VALUES ('stroke','stroke@hsenidmobile.com','ROLE_USER');
 INSERT INTO USERH(name,email,role) VALUES ('bestrow','bestrow@hsenidmobile.com','ROLE_USER');
 INSERT INTO USERH(name,email,role) VALUES ('nuwantha','nuwanthad@hsenidmobile.com','ROLE_USER');
+INSERT INTO USERH(name,email,role) VALUES ('akila123','akilac@hsenidmobile.com','ROLE_USER');
 
 
 INSERT INTO LEAVE VALUES ('3','2016-10-01','full day','sick','');

@@ -7,11 +7,13 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/ico" href="/resources/images/logo-tab.ico" sizes="16x16">
     <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
     <link rel="stylesheet" href="/resources/css/bootstrap-theme.css"/>
     <link rel="stylesheet" href="/resources/calander/themes/default.css"/>
     <link rel="stylesheet" href="/resources/calander/themes/default.date.css"/>
-    <meta name="google-signin-client_id" content="862712159345-ti9la1n9c7vtj95516st4q3nf4kt68rc.apps.googleusercontent.com">
+    <meta name="google-signin-client_id"
+          content="862712159345-ti9la1n9c7vtj95516st4q3nf4kt68rc.apps.googleusercontent.com">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
@@ -29,7 +31,7 @@
 
     <script>
         function onLoad() {
-            gapi.load('auth2', function() {
+            gapi.load('auth2', function () {
                 gapi.auth2.init();
             });
         }
@@ -45,15 +47,16 @@
 
     <meta charset="UTF-8">
     <title>Add an leave</title>
+
     <style>
-        body, html{
+        body, html {
             height: 100%;
             background-repeat: no-repeat;
             background-color: #d3d3d3;
-            font-family: 'Oxygen', sans-serif;
+            font-family:Helvetica Neue;!important;
         }
 
-        .main{
+        .main {
             margin-top: 10px;
         }
 
@@ -63,16 +66,16 @@
             font-weight: 400;
         }
 
-        hr{
+        hr {
             width: 10%;
             color: #fff;
         }
 
-        .form-group{
+        .form-group {
             margin-bottom: 15px;
         }
 
-        label{
+        label {
             margin-bottom: 15px;
         }
 
@@ -82,7 +85,7 @@
             padding-top: 3px;
         }
 
-        .main-login{
+        .main-login {
             background-color: #fff;
             /* shadows and rounded borders */
             -moz-border-radius: 2px;
@@ -94,7 +97,7 @@
 
         }
 
-        .main-center{
+        .main-center {
             margin-top: 10px;
             margin: 0 auto;
             max-width: 500px;
@@ -102,16 +105,14 @@
 
         }
 
-        .login-button{
+        .login-button {
             margin-top: 5px;
         }
 
-        .login-register{
+        .login-register {
             font-size: 11px;
             text-align: center;
         }
-
-
 
         td {
             padding: 5%;
@@ -121,6 +122,10 @@
             padding: auto;
             margin-left: 5%;
             margin-right: 5%;
+        }
+
+        .error {
+            color: #b92c28;
         }
     </style>
 </head>
@@ -133,27 +138,38 @@
                 <a class="navbar-brand" href="#">Leave Notifier</a>
             </div>
             <ul class="nav navbar-nav">
-                <li ><a href="../home">Home</a></li>
+                <li><a href="../home">Home</a></li>
                 <li class="active"><a href="#">Leave</a></li>
-                <li ><a id="alluserleaves">Company Leave Analyzing</a></li>
-                <li ><a href="../registration">User registration</a></li>
+                <li><a id="alluserleaves">Company Leave Analyzing</a></li>
+                <li><a id="registration" href="../registration">User registration</a></li>
+                <li><a id="bulkLeave" href="../bulk-leave">Bulk leave</a></li>
+
             </ul>
             <script type="text/javascript">
                 let year = new Date().getFullYear();
-                document.getElementById("alluserleaves").href="../users/graph/"+year;
+                let role = '${userRole}';
+                if (role.indexOf("ROLE_ADMIN") < 0) {
+                    document.getElementById("alluserleaves").style.visibility = "hidden";
+                    document.getElementById("registration").style.visibility = "hidden";
+                    document.getElementById("bulkLeave").style.visibility = "hidden";
+                }
+                document.getElementById("alluserleaves").href = "../users/graph/" + year;
             </script>
             <ul class="nav navbar-nav navbar-right">
                 <c:if test="${pageContext.request.userPrincipal.name != null}">
                     <form id="logoutForm" method="POST" action="${contextPath}/logout">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     </form>
-                    <li><a  id="profileData" style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
-                    <li><a  onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span> Sign Out</a></li>
+                    <li><a id="profileData"
+                           style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
+                    <li><a onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span>
+                        Sign Out</a></li>
                 </c:if>
                 <script type="text/javascript">
 
-                    let id='${userId}';
-                    document.getElementById("profileData").href="../users/"+id+"/"+year+"/graph";
+                    let id = '${userId}';
+                    document.getElementById("profileData").href = "../users/" + id + "/" + year + "/graph";
+
                 </script>
 
             </ul>
@@ -171,14 +187,23 @@
         </div>
         <div class="main-login main-center">
 
-            <form:form class="form-horizontal" action="/leave/update" method="post"  commandName="leave" id="userform">
+            <form:form class="form-horizontal" action="/leave" method="post" commandName="leave" id="userform">
 
+                <div class="form-group">
+                    <label class="error"> ${errorName} </label>
+                </div>
+
+                <%
+                    String role = (String) request.getAttribute("userRole");
+                    if (role.contains("ROLE_ADMIN")) {
+                %>
                 <div class="form-group">
                     <label for="name" class="cols-sm-2 control-label">User Name</label>
                     <div class="cols-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
-                            <from:input  class="form-control" name="name"  list="namelist"  path="name"  placeholder="Enter your Name"/>
+                            <from:input class="form-control" name="name" list="namelist" id="name" path="name"
+                                        placeholder="Enter your Name"/>
                             <datalist id="namelist">
                                 <c:forEach var="user" items="${users}">
                                     <option>${user.userName}</option>
@@ -186,16 +211,24 @@
                             </datalist>
 
                         </div>
+
+
+
                     </div>
                 </div>
+                <%
+                }
+                %>
+
 
                 <div class="form-group">
-                    <label  class="cols-sm-2 control-label">Leave Type</label>
+                    <label class="cols-sm-2 control-label">Leave Type</label>
                     <div class="cols-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-flash fa" aria-hidden="true"></i></span>
 
-                            <form:input list="leaveTypeList" path="leaveType" class="form-control" placeholder="Enter your Leaveype"/>
+                            <form:input list="leaveTypeList" id="leaveType" path="leaveType" class="form-control"
+                                        placeholder="Enter your Leaveype"/>
                             <datalist id="leaveTypeList">
                                 <c:forEach var="leaveType" items="${leaveTypes}">
                                     <option>${leaveType}</option>
@@ -207,12 +240,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label  class="cols-sm-2 control-label">Reason To Leave</label>
+                    <label class="cols-sm-2 control-label">Reason To Leave</label>
                     <div class="cols-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-asterisk fa" aria-hidden="true"></i></span>
-                            <form:input path="reasonToLeave" list="listOfReasonsToLeaveList"
-                                        placeholder="select reasonToLeave"  class="form-control"/>
+                            <form:input id="reasonToLeave" path="reasonToLeave" list="listOfReasonsToLeaveList"
+                                        placeholder="select reasonToLeave" class="form-control"/>
                             <datalist id="listOfReasonsToLeaveList">
                                 <c:forEach var="reasonToLeave" items="${listOfReasonsToLeave}">
                                     <option>${reasonToLeave}</option>
@@ -223,32 +256,39 @@
                 </div>
 
                 <div class="form-group">
-                    <label  class="cols-sm-2 control-label">Leave Date</label>
+                    <label class="cols-sm-2 control-label">Leave Date</label>
                     <div class="cols-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-time fa-lg" aria-hidden="true"></i></span>
-                            <form:input path="leaveDate" class="form-control" type="date" placeholder="date of leave"/>
+                            <form:input path="leaveDate" id="leaveDate" class="form-control" type="date"
+                                        placeholder="date of leave"/>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label  class="cols-sm-2 control-label">Comment</label>
+                    <label class="cols-sm-2 control-label">Comment</label>
                     <div class="cols-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-book fa-lg" aria-hidden="true"></i></span>
-                            <form:textarea path="comment" class="form-control" placeholder="any comments"></form:textarea>
+                            <form:textarea id="comment" path="comment" class="form-control"
+                                           placeholder="any comments"></form:textarea>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group ">
                     <form:button class="btn btn-success" type="submit">submit</form:button>
-                    <form:button class="btn" type="clear">clear</form:button>
+                    <button class="btn" onclick="clear">clear</button>
 
                 </div>
 
             </form:form>
+            <script type="text/javascript">
+                function clear() {
+
+                }
+            </script>
         </div>
     </div>
 </div>

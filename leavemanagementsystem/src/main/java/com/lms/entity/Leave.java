@@ -1,10 +1,14 @@
 package com.lms.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 /**
  * Created by nuwantha on 11/10/16.
  */
+@XmlRootElement
 public class Leave {
 
 
@@ -15,7 +19,7 @@ public class Leave {
     private String reasonToLeave;
     private String comment;
 
-
+    @JsonProperty
     public int getUserId() {
         return userId;
     }
@@ -24,6 +28,7 @@ public class Leave {
         this.userId = userId;
     }
 
+    @JsonProperty
     public String getName() {
         return name;
     }
@@ -32,6 +37,7 @@ public class Leave {
         this.name = name;
     }
 
+    @JsonProperty
     public String getReasonToLeave() {
         return reasonToLeave;
     }
@@ -40,6 +46,7 @@ public class Leave {
         this.reasonToLeave = reasonToLeave;
     }
 
+    @JsonProperty
     public String getComment() {
         return comment;
     }
@@ -48,6 +55,7 @@ public class Leave {
         this.comment = comment;
     }
 
+    @JsonProperty
     public String getLeaveDate() {
         return leaveDate;
     }
@@ -56,6 +64,7 @@ public class Leave {
         this.leaveDate = leaveDate;
     }
 
+    @JsonProperty
     public String getLeaveType() {
         return leaveType;
     }

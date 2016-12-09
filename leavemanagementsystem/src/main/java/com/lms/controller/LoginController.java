@@ -36,20 +36,33 @@ public class LoginController {
     @Autowired
     SecurityService securityService;
 
-    String CLIENT_ID = "862712159345-ti9la1n9c7vtj95516st4q3nf4kt68rc";
+    ///////////////no modification//////////////////////////////////
+    final String CLIENT_ID = "862712159345-ti9la1n9c7vtj95516st4q3nf4kt68rc";
 
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
-    public String registration(Model model,
-                               Principal principal) {
-        model.addAttribute("userForm", new User());
+    public String registration(Model model,Principal principal) {
+        //////////////////////////////OBJECTS///////////////////////////////
         Integer userId=null;
+
+
+        //////////////////////// FILLING OBJECTS//////////////////////////////
         if(principal!=null){
             userId=userService.getUserByName(principal.getName()).getUserId();
+        }
+
+
+        ///////////////////////////ADDING TO MODEL////////////////////////////
+        if(principal!=null){
             model.addAttribute("userId",userId);
         }
+        model.addAttribute("userForm", new User());
+
         return "registration";
     }
+
+
+
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model,
@@ -59,11 +72,10 @@ public class LoginController {
             return "registration";
         }
         //check whether thereis a hsenidmobile domain name.if then.
-        if (userForm.getEmail().contains("@hsenidmobile")) {
+        if (userForm.getEmail().contains("@hsenidmobile")||userForm.getEmail().contains("@hsenid")) {
             userService.createUserAccount(userForm);
-
         } else {
-            model.addAttribute("errorName","this email didn't have access");
+            model.addAttribute("errorName","this email don't have access");
             return "registration";
         }
         Integer userId=null;
@@ -71,11 +83,11 @@ public class LoginController {
             userId=userService.getUserByName(principal.getName()).getUserId();
             model.addAttribute("userId",userId);
         }
-
-        //securityService.autologin(userForm.getUsername(),userForm.getEmail());
-
         return "redirect:/home";
     }
+
+
+
 
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -89,19 +101,27 @@ public class LoginController {
         return "login";
     }
 
+
+
+
     @RequestMapping(value = "/google-login")
     public void loginWithGoogle(HttpServletRequest request, HttpServletResponse response) throws SQLException {
-        System.out.println("request:" + request.getParameter("idtoken"));
+
         GoogleIdTokenVerifier verifier = null;
         String idTokenString = null;
         GoogleIdToken idToken = null;
-        idTokenString = request.getParameter("idtoken");
         HttpTransport httpTransport = new UrlFetchTransport();
-        //get token
+
+
+
+        idTokenString = request.getParameter("idtoken");
         verifier = new GoogleIdTokenVerifier.Builder(httpTransport, new JacksonFactory())
                 .setAudience(Arrays.asList(this.CLIENT_ID))
                 .setIssuer("https://accounts.google.com")
                 .build();
+
+
+
         if (idTokenString == null) {
             System.out.println("no token mate");
             return;
@@ -114,37 +134,40 @@ public class LoginController {
                 idToken = GoogleIdToken.parse(new JacksonFactory(), idTokenString);
             } catch (IOException e) {
                 e.printStackTrace();
+                ///THROW CUSTOM EXCEPTION TOKENNOTVALID();///
             }
         }
 
 
         try {
             if (idToken != null || verifier.verify(idToken)) {
-                System.out.println("yoooo valid token");
+
+
                 GoogleIdToken.Payload payload = idToken.getPayload();
                 String email = payload.getEmail();
-                System.out.println(email);
                 User loginUserByEmail = null;
                 loginUserByEmail = userService.getUserByEmail(email);
-
                 String formUsername = loginUserByEmail.getUserName();
+
+                //////////// TRIES TO LOGIN//////////////////////
                 securityService.autologin(formUsername, email);
+
+                ////////////////////////////SEND REDIRECT URL THROUGH HEADER/////////////////
                 response.setHeader("Location", "http://localhost:9099/home");
                 return;
             } else {
                 System.out.println("couldn't verify! :" + idTokenString + "\nverifier:" + verifier.verify(idToken));
+                ///EXCEPTIONS
             }
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
+            ///EXCEPTIONS
         } catch (IOException e) {
             e.printStackTrace();
+            ///EXCEPTIONS
         }
 
     }
 
-    @RequestMapping(value = {"/", "/welcome"}, method = RequestMethod.GET)
-    public String welcome(Model model) {
-        return "welcome";
-    }
 
 }

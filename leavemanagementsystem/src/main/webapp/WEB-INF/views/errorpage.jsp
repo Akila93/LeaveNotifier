@@ -5,6 +5,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/ico" href="/resources/images/logo-tab.ico" sizes="16x16">
     <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
     <link rel="stylesheet" href="/resources/css/bootstrap-theme.css"/>
     <meta name="google-signin-client_id" content="862712159345-ti9la1n9c7vtj95516st4q3nf4kt68rc.apps.googleusercontent.com">
@@ -26,8 +27,8 @@
 
 </div>
 
-<h1 style="text-align: center;color: red">'${errorName}' has occurred </h1>
-<h3 style="text-align: center;color: red"> Error code is  '${errorCode}' </h3>
+<h1 style="text-align: center;color: red">Exception : '${errorName}'</h1>
+<h3 style="text-align: center;color: red"> Error Status  '${errorCode}' </h3>
 <h3 style="text-align: center;color: #36a6ff"> '${errorDetail}'</h3>
 
 <div class="row">

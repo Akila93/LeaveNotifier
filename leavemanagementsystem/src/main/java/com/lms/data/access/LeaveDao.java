@@ -16,8 +16,13 @@ public interface LeaveDao {
     List<Leave> getTodayLeaves();
     int getLeaveCount(int userId,int month,int year);
     List<Leave> getLeavesOfYear(int userid,int year);
-    int getLeaveCount(int month,int year);
+    int getLeaveCount(int month,int year,String leaveType);
     int isUserLeave(int userId,int month,int year,int day);
+    boolean isUserHasTodayLeave(String username);
+    boolean isUserHasLeave(String username,String date);
+    int getLeaveCount(int userId,int month,int year,String leaveType);
 
+
+//    void addNewLeaves(LeaveList)
 
 }

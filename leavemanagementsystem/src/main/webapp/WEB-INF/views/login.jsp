@@ -7,6 +7,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/ico" href="/resources/images/logo-tab.ico" sizes="16x16">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,7 +30,7 @@
 </head>
 <style type="text/css">
     .has-background-img  {
-        background-image: url("http://193.87.95.148/openwrt/rpi_cross/rootfs/usr/share/images/desktop-base/login-background.svg");
+        background-image: url('../resources/images/login-background.svg');
         background-color: #cccccc;
         padding: 0%;
 
@@ -45,6 +46,7 @@
 
     body {
         padding-top: 90px;
+        font-family:Helvetica Neue;!important;
     }
     .panel-login {
         border-color: #ccc;
@@ -118,10 +120,10 @@
                 <div class="panel-heading">
                     <div class="row">
 
-                        <img src="https://files.graphiq.com/1081/media/images/t2/HRM_Enterprise_1339562.png" style="width:50%; height:50%">
-                        <h3>Welcome to HRMenterprise</h3>
+                        <img src="resources/images/logo.png" style="width:50%; height:40%">
+                        <h3>Welcome to HSenid Leave Notifier</h3>
 
-                        <h4>Please sign in with your google Account</h4>
+                        <h4>Please sign in with your hsenid email Account</h4>
 
                     </div>
                     <hr>

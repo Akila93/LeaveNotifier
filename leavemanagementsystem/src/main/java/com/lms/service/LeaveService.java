@@ -3,11 +3,14 @@ package com.lms.service;
 import com.lms.data.access.LeaveDao;
 import com.lms.data.access.UserDao;
 import com.lms.formentity.Chart;
+import com.lms.formentity.Graph;
 import com.lms.formentity.KeyValue;
 import com.lms.entity.Leave;
 import com.lms.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -41,16 +44,30 @@ public class LeaveService {
         }
         return modifyLeaves;
     }
+//
+//    public List getLeaveListOfYear(int year,int userid){
+//        List<KeyValue> graph=new ArrayList();
+//        for (int i=1;i<=12;i++){
+//            int leaveCount = leaveDao.getLeaveCount(userid,i,year);
+//            graph.add(new KeyValue(i,leaveCount));
+//            }
+//        return graph;
+//    }
 
-    public List getLeaveListOfYear(int year,int userid){
-        List<KeyValue> graph=new ArrayList();
+    public List<Graph> getLeaveListOfYear(int year,int userid){
+        List<Graph> graph=new ArrayList();
         for (int i=1;i<=12;i++){
-            int leaveCount = leaveDao.getLeaveCount(userid,i,year);
-            graph.add(new KeyValue(i,leaveCount));
-            }
+            int firstHalfLeaves = leaveDao.getLeaveCount(userid,i,year,"first half");
+            int secondHalfLeaves=leaveDao.getLeaveCount(userid,i,year,"second half");
+            int fullDayLeaves=leaveDao.getLeaveCount(userid,i,year,"full day");
+            graph.add(new Graph(i,firstHalfLeaves,secondHalfLeaves,fullDayLeaves));
+        }
         return graph;
     }
 
+
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Leave> getLeavesOfDay(String date){
         List<Leave> allLeaves = leaveDao.getLeavesOfDay(date);
         List<Leave> modifyLeaves = new ArrayList<Leave>();
@@ -68,11 +85,15 @@ public class LeaveService {
         return leavesOfYear;
     }
 
-    public List getLeaveListOfYear(int year){
-        List<KeyValue> graph=new ArrayList();
+    public List<Graph> getLeaveListOfYear(int year){
+        List<Graph> graph=new ArrayList();
         for (int i=1;i<=12;i++){
-            int leaveCount = leaveDao.getLeaveCount(i,year);
-            graph.add(new KeyValue(i,leaveCount));
+            int firsthalf = leaveDao.getLeaveCount(i,year,"first half");
+            int secondhalf=leaveDao.getLeaveCount(i,year,"second half");
+
+            int fullday=leaveDao.getLeaveCount(i,year,"full day");
+            graph.add(new Graph(i,firsthalf,secondhalf,fullday));
+
         }
         return graph;
     }
@@ -92,5 +113,24 @@ public class LeaveService {
             chart.add(chart1);
         }
         return chart;
+
     }
+
+    public boolean isUserHasTodayLeave(String userName){
+        return leaveDao.isUserHasTodayLeave(userName);
+    }
+
+    public boolean isUserHasLeave(String userName,String date){
+
+        return leaveDao.isUserHasLeave(userName,date);
+    }
+
+
+    @Transactional
+    public void applyAllLeaveOfToday(ArrayList<Leave> leaveList) throws SQLException {
+        for (Leave leave : leaveList) {
+            leaveDao.addNewLeave(leave);
+        }
+    }
+
 }
