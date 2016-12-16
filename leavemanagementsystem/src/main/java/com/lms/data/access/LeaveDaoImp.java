@@ -39,14 +39,6 @@ public class LeaveDaoImp extends JdbcDaoSupport implements LeaveDao{
         this.namedParameterJdbcTemplate=new NamedParameterJdbcTemplate(dataSource);
     }
 
-    @Bean
-    public DataSourceTransactionManager dataSourceTransactionManager(DataSource dataSource) {
-        DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
-        dataSourceTransactionManager.setDataSource(dataSource);
-
-        return dataSourceTransactionManager;
-    }
-
 
     @Override
     public void addNewLeave(Leave leave) throws SQLException
@@ -94,6 +86,13 @@ public class LeaveDaoImp extends JdbcDaoSupport implements LeaveDao{
     public List<Leave> getTodayLeaves(){
         String sql="select * from leave where leavedate=(select CURRENT_DATE )";
         List<Leave> leaveList = getJdbcTemplate().query(sql, new LeaveMapper());
+        return leaveList;
+    }
+
+    @Override
+    public List<Leave> getTodayLeaves(int depId) {
+        String sql="select * from leave natural join userh where leavedate=(select CURRENT_DATE ) and dep_id = ?";
+        List<Leave> leaveList = getJdbcTemplate().query(sql,new Object[]{depId}, new LeaveMapper());
         return leaveList;
     }
 

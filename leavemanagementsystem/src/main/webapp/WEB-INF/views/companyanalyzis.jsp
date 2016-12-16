@@ -26,16 +26,13 @@
             });
         }
     </script>
-    <style>
-        body {
-            font-family: Helvetica Neue;
-        !important;
-        }
-    </style>
     <script type="text/css">
         #nav {
             background-color: green;
             border-color: #E7E7E7;
+        }
+        body{
+
         }
     </script>
     <script type="text/javascript">
@@ -117,6 +114,7 @@
                     title: 'Number of Days',
                     ticks: [5, 10, 15, 20]
                 },
+                connectSteps: false,
                 isStacked: true
             };
             let listOfDays = [];
@@ -150,6 +148,25 @@
                 <li><a href="../../../registration">User registration</a></li>
                 <li><a id="bulkLeave" href="../../../bulk-leave">Bulk leave</a></li>
             </ul>
+            <script type="text/javascript">
+                //let email="nuwanthad@hsenidmobile.com";
+                let email="${userEmail}";
+                let urlForPic="http://picasaweb.google.com/data/entry/api/user/"+email+"?alt=json";
+                let xhr = new XMLHttpRequest();
+                xhr.open("GET",urlForPic);
+                xhr.setRequestHeader('Accept', 'application/json');
+                xhr.onload = function() {
+                    let val = JSON.parse(xhr.responseText);
+                    val = val["entry"];
+                    val = val["gphoto$thumbnail"];
+                    val = val["$t"];
+                    //console.log("received",val);
+                    if(val!=null){
+                        document.getElementById("profilePic").src=val;
+                    }
+                };
+                xhr.send();
+            </script>
             <ul class="nav navbar-nav navbar-right">
                 <c:if test="${pageContext.request.userPrincipal.name != null}">
                     <form id="logoutForm" method="POST" action="${contextPath}/logout">
@@ -157,6 +174,9 @@
                     </form>
                     <li><a id="profileData"
                            style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
+                    <li>
+                        <img id="profilePic" style="border-radius: 50%" src="/resources/images/blankuser.png" alt="what?" width="42" height="42"/>
+                    </li>
                     <li><a onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span>
                         Sign Out</a></li>
                 </c:if>

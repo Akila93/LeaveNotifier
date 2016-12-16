@@ -65,7 +65,6 @@
         height: 100%;
         background-repeat: no-repeat;
         background-color: #d3d3d3;
-        font-family:Helvetica Neue;!important;
     }
 
     .main {
@@ -172,12 +171,34 @@
                     let year = new Date().getFullYear();
                     document.getElementById("alluserleaves").href="../users/graph/"+year;
                 </script>
+                <script type="text/javascript">
+                    //let email="nuwanthad@hsenidmobile.com";
+                    let email="${userEmail}";
+                    let urlForPic="http://picasaweb.google.com/data/entry/api/user/"+email+"?alt=json";
+                    let xhr = new XMLHttpRequest();
+                    xhr.open("GET",urlForPic);
+                    xhr.setRequestHeader('Accept', 'application/json');
+                    xhr.onload = function() {
+                        let val = JSON.parse(xhr.responseText);
+                        val = val["entry"];
+                        val = val["gphoto$thumbnail"];
+                        val = val["$t"];
+                        //console.log("received",val);
+                        if(val!=null){
+                            document.getElementById("profilePic").src=val;
+                        }
+                    };
+                    xhr.send();
+                </script>
                 <ul class="nav navbar-nav navbar-right">
                     <c:if test="${pageContext.request.userPrincipal.name != null}">
                         <form id="logoutForm" method="POST" action="${contextPath}/logout">
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         </form>
                         <li><a  id="profileData" style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
+                        <li>
+                            <img id="profilePic" style="border-radius: 50%" src="/resources/images/blankuser.png" alt="what?" width="42" height="42"/>
+                        </li>
                         <li><a  onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span> Sign Out</a></li>
                     </c:if>
                     <script type="text/javascript">
@@ -253,7 +274,7 @@
                     <label class="cols-sm-2 control-label">User Role</label>
                     <div class="cols-sm-10">
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                            <span class="input-group-addon"><i class="fa fa-key fa" aria-hidden="true"></i></span>
                             <form:select placeholder="Select Your Role" path="role" style="height: 100%;width: 100%">
 
                                 <form:option value="ROLE_USER"/>
@@ -265,6 +286,29 @@
                     </div>
 
                 </div>
+               <div class="form-group">
+
+                   <label class="cols-sm-2 control-label">User Department</label>
+                   <div class="cols-sm-10">
+                       <div class="input-group">
+                           <span class="input-group-addon"><i class="fa fa-universal-access fa" aria-hidden="true"></i></span>
+                           <form:select placeholder="Select Your department" path="depId" style="height: 100%;width: 100%">
+
+                               <c:forEach var="department" items="${departments}">
+                                   <form:option value='${department.depID}'>${department.depName}</form:option>
+                               </c:forEach>
+
+                               <%--<form:option value="Service"/>--%>
+                               <%--<form:option value="Sells"/>--%>
+                               <%--<form:option value="fdgsdfg"/>--%>
+                               <%--<form:option value="fdgsdfxgzdgdfg"/>--%>
+
+                           </form:select>
+
+                       </div>
+                   </div>
+
+               </div>
 
 
                 <div class="form-group ">

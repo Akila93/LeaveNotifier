@@ -1,5 +1,7 @@
 package com.lms.controller;
 
+import com.lms.common.Common;
+import com.lms.service.ReportService;
 import com.lms.entity.Leave;
 import com.lms.entity.User;
 import com.lms.formentity.BulkLeaveForm;
@@ -7,12 +9,10 @@ import com.lms.service.LeaveService;
 import com.lms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,30 +30,44 @@ public class LeaveController {
     @Autowired
     LeaveService leaveService;
 
+    @Autowired
+    ReportService reportService;
+
+    @Autowired
+    Common common;
+
     @RequestMapping("/bulk-leave")
     public String addBulkLeave(Model model,Principal principal){
-        List<User> allUsers = userService.getAllUsers();
+        List<User> allUsers = userService.getUserHasNotLeaveToday();
+
         model.addAttribute("bulkForm", new BulkLeaveForm());
         model.addAttribute("users", allUsers);
         model.addAttribute("userId", userService.getUserByName(principal.getName()).getUserId());
         model.addAttribute("userRole", userService.getUserByName(principal.getName()).getRole());
+        model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
         return "bulkleave";
     }
     @RequestMapping(value = "/bulk-leave",method = RequestMethod.POST)
-    public String addBulkLeave(BulkLeaveForm form, Model model, Principal principal){
-        List<User> allUsers = userService.getAllUsers();
-        model.addAttribute("users", allUsers);
-        List<String> list = form.getUsernamesOfFulldayLeave();
+    public String addBulkLeave(BulkLeaveForm form, Model model, Principal principal) throws SQLException {
 
+        ArrayList<Leave> leaveList = common.createLeaveList(form);
+        leaveService.applyAllLeaveOfToday(leaveList);
+        for (Leave leave:leaveList){
+            System.out.println(leave.getName()+"  "+leave.getLeaveDate()+" "+leave.getLeaveType());
+        }
 
+        System.out.println("full:"+form.getUsernamesOfFulldayLeave()+",first:"+form.getUsernamesOfFirstHalfLeave()+",second:"+form.getUsernamesOfSecondHalfLeave());
         User user = userService.getUserByName(principal.getName());
 
         ////////////////////////////////////////////////////////////////
         ///add leaves for bulk form
         ///////////////////////////////////////////////////////////
+        List<User> allUsers = userService.getUserHasNotLeaveToday();
+        model.addAttribute("users", allUsers);
         model.addAttribute("bulkForm", new BulkLeaveForm());
         model.addAttribute("userId", userService.getUserByName(principal.getName()).getUserId());
         model.addAttribute("userRole", userService.getUserByName(principal.getName()).getRole());
+        model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
         return "bulkleave";
     }
 
@@ -71,7 +85,7 @@ public class LeaveController {
 
         modal=this.addModelValues(modal,principal,null);
         ////////////////////////////////////////////////////////////////////////////////////////
-
+        modal.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
         return "leave";
     }
 
@@ -128,6 +142,17 @@ public class LeaveController {
         }
         return modal;
     }
+    @RequestMapping("/leave-reporting")
+    public String generateAndSendReport(Model model,Principal principal){
+
+        System.out.println("mail started to send");
+        boolean send = reportService.send();
+        if(send){
+            model.addAttribute("emailNotification","success");
+        }
+        System.out.println("mail send");
+        return "redirect: ../../home";
+    }
 
     @RequestMapping(value = "/leave", method = RequestMethod.POST)
     public String getHomePage(Leave leave,Principal principal,Model model) throws SQLException {
@@ -135,6 +160,7 @@ public class LeaveController {
         if(leave.getName()==""||leave.getComment()==""
                 || leave.getLeaveDate()=="" || leave.getReasonToLeave()==""|| leave.getLeaveType()==""){
             model=this.addModelValues(model,principal,null);
+            model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
             return "leave";
         }
         User user = userService.getUserByName(principal.getName());
@@ -146,10 +172,12 @@ public class LeaveController {
         if((!user.getRole().equals("ROLE_ADMIN")) && (!leave.getName().equals(principal.getName()))){
             String errorName="you can't add leaves for others";
             model=this.addModelValues(model,principal,errorName);
+            model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
             return "leave";
         }else if(leaveService.isUserHasLeave(leave.getName(),leave.getLeaveDate())){
             String errorName=leave.getName()+" has already added leave "+leave.getLeaveDate();
             model=this.addModelValues(model,principal,errorName);
+            model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
             return  "leave";
         }
 

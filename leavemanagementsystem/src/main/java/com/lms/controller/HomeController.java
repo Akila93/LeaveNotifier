@@ -37,7 +37,11 @@ public class HomeController {
 
     @RequestMapping("/home")
     public String getHomePage(Model model, Principal principal){
-
+        if(!userService.getUserByName(principal.getName()).getRole().contains("ROLE_ADMIN")){
+            String year="2016";
+            String redirectUrl="redirect: ../../users/"+userService.getUserByName(principal.getName()).getUserId()+"/"+year+"/graph";
+            return redirectUrl;
+        }
         Integer userId=null;
         //if(principal!=null){
             userId=userService.getUserByName(principal.getName()).getUserId();
@@ -58,6 +62,7 @@ public class HomeController {
         model.addAttribute("userCount",userService.getUserCount());
         model.addAttribute("homeForm",homeForm);
         model.addAttribute("leaveList",leaveList);
+        model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
         return "home";
 
     }
@@ -84,6 +89,7 @@ public class HomeController {
         model.addAttribute("userCount",userService.getUserCount());
         model.addAttribute("homeForm",form);
         model.addAttribute("leaveList",leaveService.getLeavesOfDay(homeForm.getDate()));//allow admin only
+        model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
         return "home";
     }
 

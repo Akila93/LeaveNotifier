@@ -6,6 +6,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.lms.entity.User;
+import com.lms.service.DepartmentService;
 import com.lms.service.SecurityService;
 import com.lms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ import java.security.GeneralSecurityException;
 import java.security.Principal;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -35,6 +38,9 @@ public class LoginController {
 
     @Autowired
     SecurityService securityService;
+
+    @Autowired
+    DepartmentService departmentService;
 
     ///////////////no modification//////////////////////////////////
     final String CLIENT_ID = "862712159345-ti9la1n9c7vtj95516st4q3nf4kt68rc";
@@ -56,8 +62,9 @@ public class LoginController {
         if(principal!=null){
             model.addAttribute("userId",userId);
         }
+        model.addAttribute("departments",departmentService.getAllDepartment());
         model.addAttribute("userForm", new User());
-
+        model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
         return "registration";
     }
 
@@ -67,8 +74,12 @@ public class LoginController {
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model,
                                Principal principal) {
+        System.out.println("department id"+userForm.getDepId());
 
         if (bindingResult.hasErrors()) {
+
+            model.addAttribute("departments",departmentService.getAllDepartment());
+            model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
             return "registration";
         }
         //check whether thereis a hsenidmobile domain name.if then.
@@ -76,6 +87,9 @@ public class LoginController {
             userService.createUserAccount(userForm);
         } else {
             model.addAttribute("errorName","this email don't have access");
+            model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
+
+            model.addAttribute("departments",departmentService.getAllDepartment());
             return "registration";
         }
         Integer userId=null;
@@ -148,12 +162,13 @@ public class LoginController {
                 User loginUserByEmail = null;
                 loginUserByEmail = userService.getUserByEmail(email);
                 String formUsername = loginUserByEmail.getUserName();
+                String image =(String) payload.get("picture");//store url with profile data.
 
                 //////////// TRIES TO LOGIN//////////////////////
                 securityService.autologin(formUsername, email);
-
                 ////////////////////////////SEND REDIRECT URL THROUGH HEADER/////////////////
                 response.setHeader("Location", "http://localhost:9099/home");
+                System.out.println(idTokenString);
                 return;
             } else {
                 System.out.println("couldn't verify! :" + idTokenString + "\nverifier:" + verifier.verify(idToken));

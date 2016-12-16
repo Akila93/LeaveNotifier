@@ -39,7 +39,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**")
-                .addResourceLocations("/WEB-INF/resources/")
+                .addResourceLocations("/resources/")
                 .setCachePeriod(3600);
     }
 

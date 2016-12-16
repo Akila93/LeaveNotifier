@@ -13,9 +13,7 @@
     <title>Leave Notifier</title>
 </head>
 <style>
-    body{
-        font-family:Helvetica Neue;!important;
-    }
+    body{}
 </style>
 <body>
 <div id="nav">
@@ -36,7 +34,7 @@
 <div class="row" style="margin-top: 7%;margin-bottom: 5%" >
     <div class="col-sm-4"></div>
 
-    <img class="col-sm-4" src="../resources/images/access-denied3.jpg"/>
+    <img class="col-sm-4" src="../../resources/images/access-denied3.jpg"/>
 
 
     <div class="col-sm-4"></div>

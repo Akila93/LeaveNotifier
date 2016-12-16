@@ -1,13 +1,20 @@
 package com.lms.data.access;
+import com.lms.entity.Leave;
 import com.lms.entity.User;
 import com.lms.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 import javax.annotation.PostConstruct;
+import javax.jws.soap.SOAPBinding;
 import javax.sql.DataSource;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by nuwantha on 11/10/16.
@@ -25,12 +32,11 @@ public class UserDaoImp extends JdbcDaoSupport implements UserDao{
 
     @Override
     public void createUserAccount(User user) {
+        System.out.println(user.getDepId()+" "+user.getRole()+" "+user.getUserName());
         String sql = "INSERT INTO userh " +
-                "(name,email,role) VALUES (?,?,?)" ;
-        getJdbcTemplate().update(sql,user.getUserName(),user.getEmail(),String.valueOf(user.getRole())
+                "(name,email,role,dep_id) VALUES (?,?,?,?)" ;
+        getJdbcTemplate().update(sql,user.getUserName(),user.getEmail(),String.valueOf(user.getRole()),Integer.parseInt(user.getDepId())
         );
-
-
 
     }
 
@@ -78,6 +84,24 @@ public class UserDaoImp extends JdbcDaoSupport implements UserDao{
         }else{
             return true;
         }
+    }
+
+    @Override
+    public List<User> getUserHasNotLeaveToday() {
+        Date date = new Date();
+        DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        String  dateS= simpleDateFormat.format(date);
+        Date dateD=null;
+        try {
+            dateD= simpleDateFormat.parse(dateS);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        String sql="select * from userh where userid not in(select userid from leave where leavedate=?)";
+        List<User> userList = getJdbcTemplate().query(sql, new Object[]{dateD}, new UserMapper());
+        return userList;
+
     }
 
 }

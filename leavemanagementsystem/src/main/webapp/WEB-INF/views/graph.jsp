@@ -32,16 +32,11 @@
             border-color: #E7E7E7;
         }
 
-        body {
-            font-family: Helvetica Neue;
-        !important;
-        }
     </script>
     <script type="text/javascript">
-
+        var yearOfCurrent='${leaveYear}';
         google.charts.load('current', {'packages': ['corechart', "calendar"]});
         google.charts.setOnLoadCallback(drawVisualization);
-
         function drawVisualization() {
 
             let list = [['Month', 'First Half', 'Second Half', "Full Day"]];
@@ -61,6 +56,7 @@
             item.push(parseInt(fullday));
             list.push(item);
             </c:forEach>
+
             var data = google.visualization.arrayToDataTable(list);
             let title = 'Leave of ${leaveUserName} Year ${leaveYear}'
             var options = {
@@ -112,9 +108,17 @@
             var options = {
                 title: "Attendance",
                 height: 350,
-                calendar: {cellSize: 12},
+                calendar: {
+                    cellSize: 12,
+                    cellColor: {
+                        stroke: '#76a7fa',
+                        strokeOpacity: 0.5,
+                        strokeWidth: 1,
+                    }
+                },
                 tooltip: {isHtml: true},
-                focusTarget: 'category'
+                focusTarget: 'category',
+
 
             };
 
@@ -147,14 +151,31 @@
                 <a class="navbar-brand" href="#">Leave Notifier</a>
             </div>
             <ul class="nav navbar-nav">
-                <li><a href="../../../home">Home</a></li>
+                <li id="homeContainer"><a href="../../../home">Home</a></li>
                 <li><a href="../../../leave">Leave</a></li>
                 <li><a id="alluserleaves">Company Leave Analyzing</a></li>
                 <li><a id="registration" href="../../../registration">User registration</a></li>
                 <li><a id="bulkLeave" href="../../../bulk-leave">Bulk leave</a></li>
-
-
             </ul>
+            <script type="text/javascript">
+                //let email="nuwanthad@hsenidmobile.com";
+                let email="${userEmail}";
+                let urlForPic="http://picasaweb.google.com/data/entry/api/user/"+email+"?alt=json";
+                let xhr = new XMLHttpRequest();
+                xhr.open("GET",urlForPic);
+                xhr.setRequestHeader('Accept', 'application/json');
+                xhr.onload = function() {
+                    let val = JSON.parse(xhr.responseText);
+                    val = val["entry"];
+                    val = val["gphoto$thumbnail"];
+                    val = val["$t"];
+                    //console.log("received",val);
+                    if(val!=null){
+                        document.getElementById("profilePic").src=val;
+                    }
+                };
+                xhr.send();
+            </script>
             <script type="text/javascript">
                 ///users/1/2016/graph
                 let year = new Date().getFullYear();
@@ -164,6 +185,7 @@
                     document.getElementById("alluserleaves").style.visibility = "hidden";
                     document.getElementById("registration").style.visibility = "hidden";
                     document.getElementById("bulkLeave").style.visibility = "hidden";
+                    document.getElementById("homeContainer").className="active";
                 }
             </script>
             <ul class="nav navbar-nav navbar-right">
@@ -173,6 +195,9 @@
                     </form>
                     <li><a id="profileData"
                            style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
+                    <li>
+                        <img id="profilePic" style="border-radius: 50%" src="/resources/images/blankuser.png" alt="what?" width="42" height="42"/>
+                    </li>
                     <li><a onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span>
                         Sign Out</a></li>
                 </c:if>
@@ -189,9 +214,72 @@
 
 
 <div class="fluid-container">
+
+    <div style="background-color: #FFFFFF;margin: 5%">
+
+        <center>
+            <h1 style="align-content: center;padding-top: 5px">${leaveUserName}</h1>
+        </center>
+
+        <div class="row" style="padding-bottom:2%;padding-left:2%;padding-right:2%">
+            <div class="col-sm-3">
+                <img src="/resources/images/blankuser.png" id="pictureOfEmplyee" height="200" width="200"/>
+            </div>
+            <script type="text/javascript">
+                //let email="nuwanthad@hsenidmobile.com";
+                let leaveUserEmail="${leaveUserEmail}";
+                let urlForLeaveUserPic="http://picasaweb.google.com/data/entry/api/user/"+leaveUserEmail+"?alt=json";
+                let xhrOfLeaveUser = new XMLHttpRequest();
+                xhrOfLeaveUser.open("GET",urlForLeaveUserPic);
+                xhrOfLeaveUser.setRequestHeader('Accept', 'application/json');
+                xhrOfLeaveUser.onload = function() {
+                    let valOfResponse = JSON.parse(xhrOfLeaveUser.responseText);
+                    valOfResponse = valOfResponse["entry"];
+                    valOfResponse = valOfResponse["gphoto$thumbnail"];
+                    valOfResponse = valOfResponse["$t"];
+                    //console.log("received",val);
+                    if(valOfResponse!=null){
+                        document.getElementById("pictureOfEmplyee").src=valOfResponse;
+                    }
+                };
+                xhrOfLeaveUser.send();
+            </script>
+
+            <div class="col-sm-4">
+                <h3>Account Type</h3>
+                <h3>Email Address</h3>
+                <h3>Employee Department</h3>
+                <h3>Employee Id</h3>
+
+
+            </div>
+            <div class="col-sm-5">
+                <h3>: ${leaveUserAccountType}</h3>
+                <h3>: ${leaveUserEmail}</h3>
+                <h3>: ${leaveUserDepartment}</h3>
+                <h3>: ${leaveUserId}</h3>
+
+
+            </div>
+        </div>
+    </div>
     <div style="background-color: #FFFFFF;margin: 5%">
         <div class="row" style="padding:2%">
             <div class="col-sm-8" >
+                <div class="row">
+
+                    <a id="pre-year" class="glyphicon glyphicon-arrow-left"></a>
+                    <span id="yearSowingSpan"></span>
+                    <a id="next-year" class="glyphicon glyphicon-arrow-right"></a>
+                    <script type="application/javascript">
+                        document.getElementById("yearSowingSpan").innerHTML=yearOfCurrent;
+                        yearOfCurrent=parseInt(yearOfCurrent);
+                        let pre_url="http://localhost:9099/users/"+'${leaveUserId}'+"/"+(yearOfCurrent-1)+"/graph";
+                        let next_url="http://localhost:9099/users/"+'${leaveUserId}'+"/"+(yearOfCurrent+1)+"/graph";
+                        document.getElementById("pre-year").href=pre_url;
+                        document.getElementById("next-year").href=next_url;
+                    </script>
+                </div>
                 <div id="chart_div" ></div>
                 <div id="calendar_basic" style="padding: 1% "></div>
             </div>

@@ -133,4 +133,8 @@ public class LeaveService {
         }
     }
 
+    public List<Leave> getTodayLeaves(int depId){
+       return leaveDao.getTodayLeaves(depId);
+    }
+
 }

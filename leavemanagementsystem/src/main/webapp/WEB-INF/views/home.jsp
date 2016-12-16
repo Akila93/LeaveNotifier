@@ -90,6 +90,23 @@
                             for (var i = year1; i > 2000; i--) {
                                 document.write('<option value="' + i + '">' + i + '</option>');
                             }
+                            let xhr = new XMLHttpRequest();
+                            //let email="nuwanthad@hsenidmobile.com";
+                            let email = "${userEmail}";
+                            let urlForPic = "http://picasaweb.google.com/data/entry/api/user/" + email + "?alt=json"
+                            xhr.open("GET", urlForPic);
+                            xhr.setRequestHeader('Accept', 'application/json');
+                            xhr.onload = function () {
+                                let val = JSON.parse(xhr.responseText);
+                                val = val["entry"];
+                                val = val["gphoto$thumbnail"];
+                                val = val["$t"];
+                                //console.log("received",val);
+                                if (val != null) {
+                                    document.getElementById("profilePic").src = val;
+                                }
+                            };
+                            xhr.send();
                         </script>
                     </form:select>
 
@@ -121,6 +138,11 @@
                     </form>
                     <li><a id="profileData"
                            style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
+                    <li>
+                            <%--load the image--%>
+                        <img id="profilePic" style="border-radius: 50%" src="/resources/images/blankuser.png"
+                             alt="what?" width="42" height="42"/>
+                    </li>
                     <li><a onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span>
                         Sign Out</a></li>
                 </c:if>
@@ -150,8 +172,7 @@
 </div>
 <style>
     body {
-        font-family: Helvetica Neue;
-    !important;
+        font-size: 130%;
     }
 
     .wraper {
@@ -162,39 +183,81 @@
         overflow: auto;
         background-color: #FFFFFF;
     }
+
+    .tb_container {
+        overflow: auto;
+    }
 </style>
 <div class="container">
+
+    <%
+        String notification = (String) request.getAttribute("emailNotification");
+        if (notification!=null && notification.equals("success")) {
+    %>
+
+     <div class="row">
+
+
+         <div class="col-sm-3"></div>
+         <div class="col-sm-6">
+
+
+             <div class="alert alert-success" role="alert">
+                 <strong>Well done!</strong> Leave Summary sent successfully.
+             </div>
+         </div>
+         <div class="col-sm-3"></div>
+
+     </div>
+
+    <%
+        }
+    %>
     <div class="raw wraper">
+
+
         <div class="col-sm-6" style="padding-top: 3%">
-            <div id="leave_search_form">
-                <%
-                    String value = (String) request.getAttribute("userRole");
-                    if (value.contains("ROLE_ADMIN")) {
-                %>
-                <form:form acti1on="../home" method="post" commandName="homeForm">
-                    <div class="input-group">
-                        <span class="input-group-addon" id="sizing-addon1">Select A Date To View Leaves</span>
-                        <form:input class="form-control" path="date" placeholder="today" type="date"/>
-                        <span class="input-group-btn">
-                        <form:button type="submit" class="btn btn-default">Reload</form:button>
-                    </span>
-                    </div>
-                </form:form>
-                <%
-                    }
-                %>
-            </div>
 
 
-            <div id="tb_container">
-                <table class="table table-bordered" id="tableOfLeaves">
-                    <thead>
-                    <th>UserName</th>
-                    <th>LeaveType</th>
-                    <th>Reason</th>
-                    <th>Comment</th>
-                    </thead>
+            <div>
+                <div id="tb_msg_container"></div>
+                <table class="table table-bordered">
                     <tbody>
+                    <tr>
+                        <%
+                            String value = (String) request.getAttribute("userRole");
+                            if (value.contains("ROLE_ADMIN")) {
+                        %>
+                        <form:form acti1on="../home" method="post" commandName="homeForm">
+                            <td class="input-group-addon" id="sizing-addon1">Select A Date</td>
+                            <td><form:input id="dateSelected" class="form-control" path="date" placeholder="today"
+                                            type="date"/></td>
+                            <td>
+                                <form:button type="submit" class="btn btn-default">Reload</form:button>
+                            </td>
+
+                        </form:form>
+                        <td><a id="sendEmail" href="../leave-reporting" class="btn btn-info" onclick="sendAReport()">Send
+                            notification</a></td>
+                        <%--<script type="text/javascript">--%>
+                        <%--let currentDate=new Date();--%>
+                        <%--let currentDay = currentDate.getDate();--%>
+                        <%--let currentMonthIndex = currentDate.getMonth();--%>
+                        <%--let currentYear = currentDate.getFullYear();--%>
+                        <%--let selectedate = document.getElementById("dateSelected").value;--%>
+                        <%--console.log("email:",selectedate,currentDate);--%>
+                        <%--</script>--%>
+                        <%
+                            }
+                        %>
+
+                    </tr>
+                    <tr id="tableHeader">
+                        <td>UserName</td>
+                        <td>LeaveType</td>
+                        <td>Reason</td>
+                        <td>Comment</td>
+                    </tr>
                     <script type="text/javascript">
                         //let year='';
                         let url = '';
@@ -226,6 +289,8 @@
                             document.getElementById('${leave.name}').href = url;
                         </script>
                     </c:forEach>
+
+
                     </tbody>
                 </table>
             </div>
@@ -245,8 +310,8 @@
                 leave_List.push(leave);
                 </c:forEach>
                 if (leave_List.length == 0) {
-                    document.getElementById("tableOfLeaves").style.visibility = "hidden";
-                    document.getElementById("tb_container").innerHTML = "no leaves has been added!";
+                    document.getElementById("tableHeader").style.visibility = "hidden";
+                    document.getElementById("tb_msg_container").innerHTML = "no leaves has been added!";
                 }
             </script>
         </div>

@@ -1,12 +1,14 @@
 package com.lms.controller;
 
 import com.lms.common.Common;
+import com.lms.entity.Department;
 import com.lms.formentity.Chart;
 import com.lms.formentity.Graph;
 import com.lms.formentity.KeyValue;
 import com.lms.entity.Leave;
 import com.lms.entity.User;
 import com.lms.formentity.SearchForm;
+import com.lms.service.DepartmentService;
 import com.lms.service.LeaveService;
 import com.lms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +39,9 @@ public class UserController {
     UserService userService;
     @Autowired
     LeaveService leaveService;
+
+    @Autowired
+    DepartmentService departmentService;
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping("/users/search")
@@ -84,6 +90,7 @@ public class UserController {
         model.addAttribute("leaveListOfYear",leaveListOfYear);
         model.addAttribute("monthlyUserLeaveChart",monthlyUserLeaveChart);
         model.addAttribute("allUsers",allUsers);
+        model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
         return "companyanalyzis";
     }
 
@@ -95,8 +102,11 @@ public class UserController {
         if(principal!=null){
             userId=userService.getUserByName(principal.getName()).getUserId();
             model.addAttribute("userId",userId);
+            model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
         }
-        return "redirect:../../users/graph/"+year+"/January";
+        int monthNumber = Calendar.getInstance().get(Calendar.MONTH)+1;
+        String monthName = Common.getMonthName(monthNumber);
+        return "redirect:../../users/graph/"+year+"/"+monthName;
     }
 
 //    @RequestMapping("/users/current-user/{year}/graph")
@@ -135,7 +145,15 @@ public class UserController {
         model.addAttribute("leaveListOfYear",leaveListOfYear);
         model.addAttribute("userName",user.getUserName());
         model.addAttribute("leaveUserName",leaveUser.getUserName());
+        model.addAttribute("leaveUserEmail",leaveUser.getEmail());
+        model.addAttribute("leaveUserId",leaveUser.getUserId());
+        model.addAttribute("leaveUserAccountType",leaveUser.getRole().contains("ROLE_ADMIN")?"Admin":"User");
         model.addAttribute("leavesOfYear",leaveOfYear);
+        System.out.println("department");
+        System.out.println(user.getDepId());
+        Department department = departmentService.getDepartment(Integer.parseInt(user.getDepId()));
+        model.addAttribute("leaveUserDepartment",department.getDepName());
+        model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
         return "graph";
     }
 

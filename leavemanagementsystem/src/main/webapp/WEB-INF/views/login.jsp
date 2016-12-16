@@ -30,7 +30,7 @@
 </head>
 <style type="text/css">
     .has-background-img  {
-        background-image: url('../resources/images/login-background.svg');
+        background-image: url('../../resources/images/login-background.svg');
         background-color: #cccccc;
         padding: 0%;
 
@@ -46,7 +46,6 @@
 
     body {
         padding-top: 90px;
-        font-family:Helvetica Neue;!important;
     }
     .panel-login {
         border-color: #ccc;

@@ -53,7 +53,6 @@
             height: 100%;
             background-repeat: no-repeat;
             background-color: #d3d3d3;
-            font-family:Helvetica Neue;!important;
         }
 
         .main {
@@ -138,7 +137,7 @@
                 <a class="navbar-brand" href="#">Leave Notifier</a>
             </div>
             <ul class="nav navbar-nav">
-                <li><a href="../home">Home</a></li>
+                <li><a id="homeId" href="../home">Home</a></li>
                 <li class="active"><a href="#">Leave</a></li>
                 <li><a id="alluserleaves">Company Leave Analyzing</a></li>
                 <li><a id="registration" href="../registration">User registration</a></li>
@@ -146,12 +145,34 @@
 
             </ul>
             <script type="text/javascript">
+                //let email="nuwanthad@hsenidmobile.com";
+                let email="${userEmail}";
+                let urlForPic="http://picasaweb.google.com/data/entry/api/user/"+email+"?alt=json";
+                let xhr = new XMLHttpRequest();
+                xhr.open("GET",urlForPic);
+                xhr.setRequestHeader('Accept', 'application/json');
+                xhr.onload = function() {
+                    let val = JSON.parse(xhr.responseText);
+                    val = val["entry"];
+                    val = val["gphoto$thumbnail"];
+                    val = val["$t"];
+                    //console.log("received",val);
+                    if(val!=null){
+                        document.getElementById("profilePic").src=val;
+                    }
+                };
+                xhr.send();
+            </script>
+            <script type="text/javascript">
                 let year = new Date().getFullYear();
                 let role = '${userRole}';
                 if (role.indexOf("ROLE_ADMIN") < 0) {
                     document.getElementById("alluserleaves").style.visibility = "hidden";
                     document.getElementById("registration").style.visibility = "hidden";
                     document.getElementById("bulkLeave").style.visibility = "hidden";
+
+                    let url="../users/"+"${userId}"+"/"+year+"/graph"
+                    document.getElementById("homeId").href=url;
                 }
                 document.getElementById("alluserleaves").href = "../users/graph/" + year;
             </script>
@@ -162,6 +183,9 @@
                     </form>
                     <li><a id="profileData"
                            style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
+                    <li>
+                        <img id="profilePic" style="border-radius: 50%" src="/resources/images/blankuser.png" alt="what?" width="42" height="42"/>
+                    </li>
                     <li><a onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span>
                         Sign Out</a></li>
                 </c:if>

@@ -53,7 +53,7 @@
             height: 100%;
             background-repeat: no-repeat;
             background-color: #d3d3d3;
-            font-family:Helvetica Neue;!important;
+
         }
 
         .main {
@@ -140,7 +140,7 @@
             </div>
             <ul class="nav navbar-nav">
                 <li><a href="../home">Home</a></li>
-                <li ><a href="#">Leave</a></li>
+                <li ><a href="../leave">Leave</a></li>
                 <li><a id="alluserleaves">Company Leave Analyzing</a></li>
                 <li><a id="registration" href="../registration">User registration</a></li>
                 <li class="active"><a id="bulkLeave" href="../bulk-leave">Bulk leave</a></li>
@@ -155,6 +155,23 @@
                     document.getElementById("bulkLeave").style.visibility = "hidden";
                 }
                 document.getElementById("alluserleaves").href = "../users/graph/" + year;
+                //let email="nuwanthad@hsenidmobile.com";
+                let email="${userEmail}";
+                let urlForPic="http://picasaweb.google.com/data/entry/api/user/"+email+"?alt=json"
+                let xhr = new XMLHttpRequest();
+                xhr.open("GET",urlForPic);
+                xhr.setRequestHeader('Accept', 'application/json');
+                xhr.onload = function() {
+                    let val = JSON.parse(xhr.responseText);
+                    val = val["entry"];
+                    val = val["gphoto$thumbnail"];
+                    val = val["$t"];
+                    //console.log("received",val);
+                    if(val!=null){
+                        document.getElementById("profilePic").src=val;
+                    }
+                };
+                xhr.send();
             </script>
             <ul class="nav navbar-nav navbar-right">
                 <c:if test="${pageContext.request.userPrincipal.name != null}">
@@ -163,6 +180,9 @@
                     </form>
                     <li><a id="profileData"
                            style="color: white;text-align: center">${pageContext.request.userPrincipal.name}</a></li>
+                    <li>
+                        <img id="profilePic" style="border-radius: 50%" src="/resources/images/blankuser.png" alt="what?" width="42" height="42"/>
+                    </li>
                     <li><a onclick="document.forms['logoutForm'].submit()"><span class="glyphicon glyphicon-off"></span>
                         Sign Out</a></li>
                 </c:if>
@@ -193,7 +213,7 @@
                 <div class="row">
                     <div class="col-sm-4">
                     </div>
-                    <form:button class="btn btn-default col-sm-4" type="submit" style="" onclick="onPushAll()">push all to stacks</form:button>
+                    <form:button class="btn btn-default col-sm-4" type="submit" style="" onclick="onPushAll()">push to Leave Table</form:button>
                     <div class="col-sm-4">
                     </div>
                 </div>
@@ -203,11 +223,11 @@
                         <h3>Full day</h3>
                     </div>
                     <div class="col-sm-4">
-                        <input type="hidden" path="usernamesOfFirstHalfLeave" id="inputFieldFirstHalf">
+                        <form:input type="hidden" path="usernamesOfFirstHalfLeave" id="inputFieldFirstHalf"/>
                         <h3>First half</h3>
                     </div>
                     <div class="col-sm-4">
-                        <input type="hidden" path="usernamesOfSecondHalfLeave" id="inputFieldSecondHalf">
+                        <form:input type="hidden" path="usernamesOfSecondHalfLeave" id="inputFieldSecondHalf"/>
                         <h3>Second half</h3>
                     </div>
                 </div>
@@ -229,7 +249,7 @@
                         let rootNode=document.getElementById("namelist");
                         for(const usernameIndex in userNameListForSelecting){
                             let newChild=document.createElement("option");
-                            console.log(userNameListForSelecting[usernameIndex]);
+                            //console.log(userNameListForSelecting[usernameIndex]);
                             let textNode= document.createTextNode(userNameListForSelecting[usernameIndex]);
                             newChild.appendChild(textNode);
                             rootNode.appendChild(newChild);
@@ -277,6 +297,14 @@
                         return returnValue;
 
                     }
+                    function addElementToNameList(name){
+                        let rootNode=document.getElementById("namelist");
+                        let newChild=document.createElement("option");
+                        let textNode= document.createTextNode(name);
+                        newChild.appendChild(textNode);
+                        rootNode.appendChild(newChild);
+
+                    }
                     function createJsonArrayString(array){
                         let returnStr="";
                         for(let i=0;i<array.length;i++){
@@ -297,13 +325,19 @@
                         }
                         let node = document.createElement("tr");
                         let nodetd = document.createElement("td");
+                        let nodebtn = document.createElement("span");
                         let textnode = document.createTextNode(name);
                         nodetd.appendChild(textnode);
+                        nodebtn.className="fa fa-times";
+                        nodebtn.onclick=remove.bind(node,"full");
+                        node.appendChild(nodebtn);
+                        nodetd.setAttribute("id",("value_"+name+"_fullDayList"));
                         node.appendChild(nodetd);
+                        node.setAttribute("id",(name+"_fullDayList"));
                         document.getElementById("fullDayList").appendChild(node);
                         fulldayStack.push(name);
                         document.getElementById("inputFieldFullday").value=createJsonArrayString(fulldayStack);
-
+                        console.log("full:",fulldayStack);
                     }
                     function onFirstHalfSubmit(){
                         let name = document.getElementById("firstLeave").value;
@@ -313,12 +347,19 @@
                         }
                         let node = document.createElement("tr");
                         let nodetd = document.createElement("td");
+                        let nodebtn = document.createElement("span");
                         let textnode = document.createTextNode(name);
                         nodetd.appendChild(textnode);
+                        nodebtn.className="fa fa-times";
+                        nodebtn.onclick=remove.bind(node,"first");
+                        node.appendChild(nodebtn);
+                        nodetd.setAttribute("id",("value_"+name+"_firstHalfList"));
                         node.appendChild(nodetd);
+                        node.setAttribute("id",(name+"_firstHalfList"));
                         document.getElementById("firstHalfList").appendChild(node);
                         firstHalfStack.push(name);
                         document.getElementById("inputFieldFirstHalf").value=createJsonArrayString(firstHalfStack);
+                        console.log("first:",firstHalfStack);
                     }
                     function onSecondHalfSubmit(){
                         let name = document.getElementById("secondLeave").value;
@@ -328,19 +369,59 @@
                         }
                         let node = document.createElement("tr");
                         let nodetd = document.createElement("td");
+                        let nodebtn = document.createElement("span");
                         let textnode = document.createTextNode(name);
                         nodetd.appendChild(textnode);
+                        nodebtn.className="fa fa-times";
+                        nodebtn.onclick=remove.bind(node,"");
+                        node.appendChild(nodebtn);
+                        nodetd.setAttribute("id",("value_"+name+"_seconedHalfList"));
                         node.appendChild(nodetd);
+                        node.setAttribute("id",(name+"_seconedHalfList"));
                         document.getElementById("seconedHalfList").appendChild(node);
                         SecondHalfStack.push(name);
                         document.getElementById("inputFieldSecondHalf").value=createJsonArrayString(SecondHalfStack);
+                        console.log("seconed:",SecondHalfStack);
+                    }
+                    function removeArrayElement(arr, what) {
+                        let newList = [];
+                        for(let x=0;x<arr.length;x++){
+                            if(arr[x].indexOf(what)>=0){
+                                continue;
+                            }
+                            newList.push(arr[x]);
+                        }
+                        return newList;
+                    }
+                    function remove(select){
+                        let list=[];
+                        if(select=="full"){
+                            list=fulldayStack;
+                        }else if(select="first"){
+                            list=firstHalfStack;
+                        }else{
+                            list=SecondHalfStack;
+                        }
+                        let removingNode=this;
+                        removingNode.getElementsByTagName("td");
+                        list = removeArrayElement(list,removingNode.getElementsByTagName("td")[0].innerText);
+                        if(select=="full"){
+                            fulldayStack=list;
+                        }else if(select="first"){
+                            firstHalfStack=list;
+                        }else{
+                            SecondHalfStack=list;
+                        }
+                        addElementToNameList(removingNode.getElementsByTagName("td")[0].innerText);
+                        removingNode.remove();
                     }
                     function onPushAll(){
                         ///send request/clear stacks
-                        let fullDayList =document.getElementById("fullDayList");
-                        let seconedHalfList =document.getElementById("seconedHalfList");
-                        let firstHalfList =document.getElementById("firstHalfList");
-                        console.log("working duisdfgdsfg");
+                        //let fullDayList =document.getElementById("fullDayList");
+                        //let seconedHalfList =document.getElementById("seconedHalfList");
+                        //let firstHalfList =document.getElementById("firstHalfList");
+                        console.log("full",document.getElementById("inputFieldFullday").value,"first:",document.getElementById("inputFieldFirstHalf").value,"second",
+                                document.getElementById("inputFieldSecondHalf").value);
 
 //                        fullDayList.innerHTML = '';
 //                        seconedHalfList.innerHTML = '';

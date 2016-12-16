@@ -50,5 +50,8 @@ public class UserService {
         return userDao.isUserHasAccount(userName);
     }
 
+    public List<User> getUserHasNotLeaveToday(){
+        return userDao.getUserHasNotLeaveToday();
+    }
 
 }
