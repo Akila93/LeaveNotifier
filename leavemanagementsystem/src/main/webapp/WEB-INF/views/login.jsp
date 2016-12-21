@@ -26,6 +26,9 @@
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script type="text/javascript">
+
+    </script>
     <![endif]-->
 </head>
 <style type="text/css">
@@ -152,9 +155,12 @@
 
 <script type="application/javascript">
     function onSuccess(googleUser) {
+        var DOMAIN_NAME="<spring:message code='server.domain'/>";
+        var PORT_NUMBER="<spring:message code='server.port'/>";
         let id_token = googleUser.getAuthResponse().id_token;
         let xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:9099/google-login');
+        let urlOfGoogleLogin="http://"+DOMAIN_NAME+":"+PORT_NUMBER+"/google-login";
+        xhr.open('POST', urlOfGoogleLogin);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onload = function() {
             console.log('Signed in as: ' + xhr.responseText+"\nLocation:"+xhr.getResponseHeader("Location"));

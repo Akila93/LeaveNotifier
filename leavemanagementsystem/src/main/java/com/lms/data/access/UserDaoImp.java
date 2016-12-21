@@ -76,6 +76,17 @@ public class UserDaoImp extends JdbcDaoSupport implements UserDao{
     }
 
     @Override
+    public boolean isUserHasAccountByEmail(String email) {
+        String sql="select count( *) from userh where email=?";
+        int count = getJdbcTemplate().queryForObject(sql, Integer.class,email);
+        if(count==0) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    @Override
     public boolean isUserHasAccount(String userName) {
         String sql="select count( *) from userh where name=?";
         int count = getJdbcTemplate().queryForObject(sql, Integer.class,userName);

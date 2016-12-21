@@ -5,7 +5,11 @@ import com.lms.entity.User;
 import com.lms.formentity.BulkLeaveForm;
 import com.lms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import javax.xml.transform.sax.SAXSource;
 import java.text.DateFormat;
@@ -101,5 +105,18 @@ public class Common {
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return simpleDateFormat.format(date);
+    }
+
+    public static void printUserList(){
+        final String uri = "https://www.googleapis.com/admin/directory/v1/users?viewType=domain_public&domain=hsenidmobile.com";
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization","Bearer  ya29.Ci-7A8pEegx2OmIqxQ0WBavaPkhijZrSpsB5P6B5VOgzvXddYZGD4tv0ZU5AuG4gbg");
+        HttpEntity<String> entity = new HttpEntity<String>("parameters",headers);
+
+        ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+
+        System.out.println(result);
     }
 }

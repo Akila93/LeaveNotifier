@@ -49,10 +49,14 @@
 
 <script>
     function returnToPage(){
+        var DOMAIN_NAME="<spring:message code='server.domain'/>";
+        var PORT_NUMBER="<spring:message code='server.port'/>";
         if('${pageContext.request.userPrincipal.name}'){
-            window.location.assign("http://localhost:9099/home");
+            let urlOfHome="http://"+DOMAIN_NAME+":"+PORT_NUMBER+"/home";
+            window.location.assign(urlOfHome);
         }else{
-            window.location.assign("http://localhost:9099/login");
+            let urlOfLogin="http://"+DOMAIN_NAME+":"+PORT_NUMBER+"/login";
+            window.location.assign(urlOfLogin);
         }
 
     }

@@ -16,6 +16,6 @@ public interface UserDao {
     int getUserCount();
     boolean isUserHasAccount(String userName);
     List getUserHasNotLeaveToday();
-
+    boolean isUserHasAccountByEmail(String email);
 
 }

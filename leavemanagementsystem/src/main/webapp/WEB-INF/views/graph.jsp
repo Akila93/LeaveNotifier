@@ -13,6 +13,10 @@
     <meta name="google-signin-client_id"
           content="862712159345-ti9la1n9c7vtj95516st4q3nf4kt68rc.apps.googleusercontent.com">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        var DOMAIN_NAME="<spring:message code='server.domain'/>";
+        var PORT_NUMBER="<spring:message code='server.port'/>";
+    </script>
     <script>
         function onLoad() {
             gapi.load('auth2', function () {
@@ -274,8 +278,8 @@
                     <script type="application/javascript">
                         document.getElementById("yearSowingSpan").innerHTML=yearOfCurrent;
                         yearOfCurrent=parseInt(yearOfCurrent);
-                        let pre_url="http://localhost:9099/users/"+'${leaveUserId}'+"/"+(yearOfCurrent-1)+"/graph";
-                        let next_url="http://localhost:9099/users/"+'${leaveUserId}'+"/"+(yearOfCurrent+1)+"/graph";
+                        let pre_url="http://"+DOMAIN_NAME+":"+PORT_NUMBER+"/users/"+'${leaveUserId}'+"/"+(yearOfCurrent-1)+"/graph";
+                        let next_url="http://"+DOMAIN_NAME+":"+PORT_NUMBER+"/users/"+'${leaveUserId}'+"/"+(yearOfCurrent+1)+"/graph";
                         document.getElementById("pre-year").href=pre_url;
                         document.getElementById("next-year").href=next_url;
                     </script>

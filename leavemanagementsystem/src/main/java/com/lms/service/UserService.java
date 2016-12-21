@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -52,6 +53,18 @@ public class UserService {
 
     public List<User> getUserHasNotLeaveToday(){
         return userDao.getUserHasNotLeaveToday();
+    }
+
+    @Transactional
+    public boolean updateUserAccount(List<User> userList){
+        for (User user :userList) {
+            String email = user.getEmail();
+            boolean userHasAccountByEmail = userDao.isUserHasAccountByEmail(email);
+            if(!userHasAccountByEmail){
+                userDao.createUserAccount(user);
+            }
+        }
+        return true;
     }
 
 }

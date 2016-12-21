@@ -5,6 +5,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.lms.common.Common;
 import com.lms.entity.User;
 import com.lms.service.DepartmentService;
 import com.lms.service.SecurityService;
@@ -67,8 +68,6 @@ public class LoginController {
         model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
         return "registration";
     }
-
-
 
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
@@ -168,6 +167,9 @@ public class LoginController {
                 securityService.autologin(formUsername, email);
                 ////////////////////////////SEND REDIRECT URL THROUGH HEADER/////////////////
                 response.setHeader("Location", "http://localhost:9099/home");
+//               Common.printUserList();
+//
+
                 System.out.println(idTokenString);
                 return;
             } else {

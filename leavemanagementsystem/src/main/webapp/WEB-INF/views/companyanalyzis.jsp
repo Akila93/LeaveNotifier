@@ -181,7 +181,8 @@
                         Sign Out</a></li>
                 </c:if>
                 <script type="text/javascript">
-                    let year = '${leaveYear}'
+                    let year = '${leaveYear}';
+                    year=parseInt(year);
                     let id = '${userId}';
                     document.getElementById("profileData").href = "../../../users/" + id + "/" + year + "/graph";
                 </script>
@@ -196,7 +197,7 @@
     <div style="background-color: #FFFFFF;margin: 5%">
 
 
-        <div style="padding:2%">  Year :  <input type="number" name="yearSelect" id="yearSelect"/>
+        <div style="padding:2%">  Year :  <input value='${year}' type="number" name="yearSelect" id="yearSelect"/>
             <button class="button" onclick="OnSet()">Set</button>
             <script type="application/javascript">
                 function OnSet() {
@@ -206,7 +207,9 @@
                         return;
                     }
                     //value_for_year=(String)value_for_year;
-                    let onSetUrl = "http://localhost:9099/users/graph/" + value_for_year;
+                    var DOMAIN_NAME="<spring:message code='server.domain'/>";
+                    var PORT_NUMBER="<spring:message code='server.port'/>";
+                    let onSetUrl = "http://"+DOMAIN_NAME+":"+PORT_NUMBER+"/users/graph/" + value_for_year;
                     window.location.assign(onSetUrl);
                 }
 

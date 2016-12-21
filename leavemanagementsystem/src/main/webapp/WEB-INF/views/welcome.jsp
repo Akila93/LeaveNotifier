@@ -24,6 +24,7 @@
     <![endif]-->
 </head>
 <body>
+<h1><spring:message code="home.page.title"/></h1>
 <div class="container">
 
     <c:if test="${pageContext.request.userPrincipal.name != null}">

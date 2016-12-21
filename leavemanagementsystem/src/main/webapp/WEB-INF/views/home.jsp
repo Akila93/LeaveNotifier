@@ -13,7 +13,6 @@
     <meta name="google-signin-client_id"
           content="862712159345-ti9la1n9c7vtj95516st4q3nf4kt68rc.apps.googleusercontent.com">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
     <script type="text/javascript">
         google.charts.load('current', {'packages': ['corechart']});
         google.charts.setOnLoadCallback(drawChart);
@@ -64,7 +63,6 @@
     <title>Leave Notifier</title>
 </head>
 <body style="background-color: #d3d3d3 ">
-
 <div id="nav">
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">

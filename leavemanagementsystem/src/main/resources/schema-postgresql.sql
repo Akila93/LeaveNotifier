@@ -36,6 +36,7 @@ INSERT INTO DEPARTMENT(DEP_NAME) VALUES ('Human Resources');
 
 
 INSERT INTO USERH(name,email,role,DEP_ID) VALUES ('Nuwantha','nuwanthad@hsenidmobile.com','ROLE_ADMIN',1);
+INSERT INTO USERH(name,email,role,DEP_ID) VALUES ('Akila','akilac@hsenidmobile.com','ROLE_ADMIN',1);
 INSERT INTO USERH(name,email,role,DEP_ID) VALUES ('Sadarenu','sadarenu@hsenidmobile.com','ROLE_USER',1);
 INSERT INTO USERH(name,email,role,DEP_ID) VALUES ('Harsha','harsha@hsenidmobile.com','User','ROLE_USER',1);
 INSERT INTO USERH(name,email,role,DEP_ID) VALUES ('Udara','udara@hsenidmobile.com','ROLE_USER',1);

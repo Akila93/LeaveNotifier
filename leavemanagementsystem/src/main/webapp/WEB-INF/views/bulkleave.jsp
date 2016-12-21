@@ -416,16 +416,9 @@
                         removingNode.remove();
                     }
                     function onPushAll(){
-                        ///send request/clear stacks
-                        //let fullDayList =document.getElementById("fullDayList");
-                        //let seconedHalfList =document.getElementById("seconedHalfList");
-                        //let firstHalfList =document.getElementById("firstHalfList");
                         console.log("full",document.getElementById("inputFieldFullday").value,"first:",document.getElementById("inputFieldFirstHalf").value,"second",
                                 document.getElementById("inputFieldSecondHalf").value);
 
-//                        fullDayList.innerHTML = '';
-//                        seconedHalfList.innerHTML = '';
-//                        firstHalfList.innerHTML = '';
                     }
                 </script>
                 <div class="row">

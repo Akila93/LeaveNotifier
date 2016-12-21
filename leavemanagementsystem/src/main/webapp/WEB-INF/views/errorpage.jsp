@@ -46,7 +46,10 @@
 
 <script>
     function gotoLoginPage(){
-        window.location.assign("http://localhost:9099/login");
+        var DOMAIN_NAME="<spring:message code='server.domain'/>";
+        var PORT_NUMBER="<spring:message code='server.port'/>";
+        let urlOfLogin="http://"+DOMAIN_NAME+":"+PORT_NUMBER+"/login";
+        window.location.assign(urlOfLogin);
     }
 </script>
 </body>
