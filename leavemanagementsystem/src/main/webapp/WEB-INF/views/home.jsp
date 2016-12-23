@@ -108,7 +108,7 @@
                         </script>
                     </form:select>
 
-                        <%--<form:input type="date" class="form-control" placeholder="Type a year" name="year" path="year"/>--%>
+                        <%--<form:input type="date" class="form-control" placeholder="Type a year" Name="year" path="year"/>--%>
                         <%----%>
 
 

@@ -47,7 +47,7 @@ public class UserController {
     @RequestMapping("/users/search")
     public String findUser(Model model, HttpServletRequest request,Principal principal){
 
-        String name = request.getParameter("name");
+        String name = request.getParameter("Name");
         //////check user role and if he/she is not an admin redirect to home/////
         User user = null;
         if(userService.isUserHasAccount(name)){

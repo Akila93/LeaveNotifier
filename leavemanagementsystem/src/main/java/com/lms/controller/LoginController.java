@@ -1,22 +1,30 @@
 package com.lms.controller;
 
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.lms.common.Common;
 import com.lms.entity.User;
+import com.lms.jasonWrapper.Wrapper;
 import com.lms.service.DepartmentService;
 import com.lms.service.SecurityService;
 import com.lms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -67,6 +75,36 @@ public class LoginController {
         model.addAttribute("userForm", new User());
         model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
         return "registration";
+    }
+
+
+    @RequestMapping(value = "/something")
+    public String somethingUrl(Model model, @PathVariable("code") String authorizationCode){
+
+        try {
+            HttpTransport netTransport = new NetHttpTransport();
+            JsonFactory jsonFactory = new JacksonFactory();
+            GoogleTokenResponse token = new GoogleAuthorizationCodeTokenRequest(netTransport,
+                    jsonFactory, CLIENT_ID, "jk0sCDkkvZnrJQLihTSDjzEr", authorizationCode,
+                    "http://localhost:9099/something").execute();
+            System.out.println("Valid access token " + token.getAccessToken());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "welcome";
+    }
+
+    @RequestMapping(value = "/welcome")
+    public String welcomeUrl(Model model){
+
+        try {
+            String token=Common.getToken();
+            model.addAttribute("code",token);
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("code","fgzsdg");
+        }
+        return "welcome";
     }
 
 
@@ -167,7 +205,6 @@ public class LoginController {
                 securityService.autologin(formUsername, email);
                 ////////////////////////////SEND REDIRECT URL THROUGH HEADER/////////////////
                 response.setHeader("Location", "http://localhost:9099/home");
-//               Common.printUserList();
 //
 
                 System.out.println(idTokenString);
@@ -186,5 +223,25 @@ public class LoginController {
 
     }
 
+    @RequestMapping(value ="/one")
+    public void One(){
+        System.out.println("one is executed");
+    }
+
+    @RequestMapping(value = "/three")
+    public void three() {
+        String clientId = "862712159345-ti9la1n9c7vtj95516st4q3nf4kt68rc.apps.googleusercontent.com";
+
+        String url = "https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/admin.directory.user.readonly&redirect_uri=http://localhost:9099/one&response_type=code&client_id=" + clientId;
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+        System.out.println("before execution");
+        ResponseEntity<String> exchange = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+        //System.out.println(exchange);
+       // exchange.getHeaders(;
+        System.out.println("after execution");
+    }
 
 }

@@ -164,7 +164,7 @@ public class LeaveController {
             return "leave";
         }
         User user = userService.getUserByName(principal.getName());
-        System.out.println("leave name"+leave.getLeaveDate()+" "+leave.getName());
+        System.out.println("leave Name"+leave.getLeaveDate()+" "+leave.getName());
         if(!user.getRole().equals("ROLE_ADMIN")){
             leave.setName(principal.getName());
         }

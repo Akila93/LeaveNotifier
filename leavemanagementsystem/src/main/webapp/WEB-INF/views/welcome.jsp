@@ -24,17 +24,20 @@
     <![endif]-->
 </head>
 <body>
-<h1><spring:message code="home.page.title"/></h1>
 <div class="container">
 
-    <c:if test="${pageContext.request.userPrincipal.name != null}">
-        <form id="logoutForm" method="POST" action="${contextPath}/logout">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        </form>
+    <%
+        String code = request.getParameter("code");
+    %>
+    <%
+        if(code!=null){
+    %>
 
-        <h2>Welcome ${pageContext.request.userPrincipal.name} | <a onclick="document.forms['logoutForm'].submit()">Logout</a></h2>
+        <h1> code is: <%=code%></h1>
 
-    </c:if>
+    <%
+        }
+    %>
 
 </div>
 <!-- /container -->
