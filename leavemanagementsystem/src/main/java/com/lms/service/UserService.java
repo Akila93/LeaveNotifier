@@ -67,4 +67,8 @@ public class UserService {
         return true;
     }
 
+    public void updateUserAccount(User user){
+        userDao.updateUserAccount(user);
+    }
+
 }

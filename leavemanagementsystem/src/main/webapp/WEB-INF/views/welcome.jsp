@@ -25,19 +25,19 @@
 </head>
 <body>
 <div class="container">
+   done!
+    <%--<%--%>
+        <%--String code = request.getParameter("code");--%>
+    <%--%>--%>
+    <%--<%--%>
+        <%--if(code!=null){--%>
+    <%--%>--%>
 
-    <%
-        String code = request.getParameter("code");
-    %>
-    <%
-        if(code!=null){
-    %>
+        <%--<h1> code is: <%=code%></h1>--%>
 
-        <h1> code is: <%=code%></h1>
-
-    <%
-        }
-    %>
+    <%--<%--%>
+        <%--}--%>
+    <%--%>--%>
 
 </div>
 <!-- /container -->

@@ -1,11 +1,13 @@
 package com.lms.entity;
 
-import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created by nuwantha on 11/10/16.
  */
-@Service
+@XmlRootElement
 public class User {
 
     private int userId;
@@ -34,6 +36,7 @@ public class User {
     }
 
 
+    @JsonProperty
     public int getUserId() {
         return userId;
     }
@@ -42,6 +45,8 @@ public class User {
         this.userId = userId;
     }
 
+
+    @JsonProperty
     public String getUserName() {
         return userName;
     }
@@ -50,6 +55,8 @@ public class User {
         this.userName = userName;
     }
 
+
+    @JsonProperty
     public String getEmail() {
         return email;
     }
@@ -58,6 +65,8 @@ public class User {
         this.email = email;
     }
 
+
+    @JsonProperty
     public String getRole() {
         return role;
     }
@@ -66,6 +75,8 @@ public class User {
         this.role = role;
     }
 
+
+    @JsonProperty
     public String getDepId() {
         return depId;
     }
@@ -73,10 +84,10 @@ public class User {
     public void setDepId(String depId) {
         this.depId = depId;
     }
-
-    @Override
-    public String toString() {
-        return "User [userid=" + userId + ", username=" + userName+ "]";
-    }
+//
+//    @Override
+////    public String toString() {
+////        return "User [userid=" + userId + ", username=" + userName+ "]";
+////    }
 
 }

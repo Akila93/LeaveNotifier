@@ -30,6 +30,15 @@ public class UserDaoImp extends JdbcDaoSupport implements UserDao{
         setDataSource(dataSource);
     }
 
+
+    @Override
+    public void updateUserAccount(User user) {
+
+        String sql="update userh set role=? , dep_id=? where email=?";
+        getJdbcTemplate().update(sql,user.getRole(),Integer.parseInt(user.getDepId()),user.getEmail());
+
+    }
+
     @Override
     public void createUserAccount(User user) {
         System.out.println(user.getDepId()+" "+user.getRole()+" "+user.getUserName());

@@ -17,7 +17,7 @@ public class Sheduler {
 
     @Autowired
     UserService userService;
-    @Scheduled(cron = " * 0 * * * *")
+    @Scheduled(cron = " * * 0 * * *")
     public void updateUserAccount(){
         List<User> userList = Common.printUserList();
         userService.updateUserAccount(userList);

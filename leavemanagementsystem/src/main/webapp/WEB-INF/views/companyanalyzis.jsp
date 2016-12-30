@@ -34,6 +34,13 @@
         body{
 
         }
+        .header-styles{
+            position: fixed;!important;
+            left: 0px;!important;
+            right: 0px;!important;
+            top: 0px;!important;
+
+        }
     </script>
     <script type="text/javascript">
 
@@ -135,7 +142,7 @@
 </head>
 <body style="background-color: #d3d3d3">
 
-<div id="nav">
+<div id="nav" class="header-styles">
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">

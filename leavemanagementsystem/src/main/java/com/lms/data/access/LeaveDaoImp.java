@@ -171,4 +171,22 @@ public class LeaveDaoImp extends JdbcDaoSupport implements LeaveDao{
     }
 
 
+    @Override
+    public List<Leave> getLeavesOfDay(String date, int projectLeaderId) {
+
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date dateD=null;
+        try {
+            dateD= format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        String sql="select * from leave natural join userh natural join userofgroup natural join groups where leavedate=? and grouplederid=?";
+
+
+        List<Leave> leaveList = getJdbcTemplate().query(sql, new Object[]{dateD,projectLeaderId}, new LeaveMapper());
+        return leaveList;
+
+    }
 }

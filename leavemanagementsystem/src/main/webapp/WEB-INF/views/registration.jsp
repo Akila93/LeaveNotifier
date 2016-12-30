@@ -1,3 +1,6 @@
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.lms.entity.User" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -140,15 +143,35 @@
 </style>
 
 
-<%--<script type="text/javascript">--%>
+<script type="application/javascript">
+   function changeForm(value){
 
-    <%--let role = '${userRole}';--%>
-    <%--console.log("role is ", role);--%>
-    <%--if(role.indexOf("ROLE_ADMIN")){--%>
-        <%--document.getElementById("username-form-group").style.visibility = "hidden";--%>
-    <%--}--%>
+       console.log("select a item",value);
+       let usersOf='${users}';
+       let usertem;
+       var userList = new Array();
+       <c:forEach items="${users}" var="user" varStatus="status">
 
-<%--</script>--%>
+                 usertem= new Object();
+                 usertem.name = '${user.userName}';
+                 usertem.email= '${user.email}';
+                 usertem.role='${user.role}';
+                 usertem.depId='${user.depId}';
+
+       userList.push(usertem);
+       </c:forEach>
+       for (let i=0;i<userList.length;i++){
+           if(userList[i].name===value){
+               document.getElementById("email-form").value = userList[i].email;
+               document.getElementById("role-form").value = userList[i].role;
+               document.getElementById("depId-form").value = userList[i].depId;
+               break;
+           }
+       }
+
+    }
+
+</script>
 
 <body>
 
@@ -237,8 +260,16 @@
 
                             <spring:bind path="userName">
                                 <div class="form-group ${status.error ? 'has-error' : ''}">
-                                    <form:input type="text" path="userName" class="form-control" placeholder="Username"
-                                                autofocus="true"></form:input>
+                                    <form:input type="text" path="userName" class="form-control" placeholder="Username" list="namelist"
+                                                autofocus="true" onchange="changeForm(this.value)"></form:input>
+
+                                    <datalist id="namelist">
+                                        <c:forEach var="user" items="${users}">
+                                            <option>${user.userName}</option>
+                                        </c:forEach>
+                                    </datalist>
+
+
                                     <form:errors path="userName"></form:errors>
                                 </div>
                             </spring:bind>
@@ -253,7 +284,7 @@
                             <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
                             <spring:bind path="email">
                                 <div class="form-group ${status.error ? 'has-error' : ''}">
-                                    <form:input type="email" path="email" class="form-control"
+                                    <form:input id ="email-form" type="email" path="email" class="form-control"
                                                 placeholder="Enter User Email"></form:input>
 
                                     <form:errors path="email"></form:errors>
@@ -275,7 +306,7 @@
                     <div class="cols-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-key fa" aria-hidden="true"></i></span>
-                            <form:select placeholder="Select Your Role" path="role" style="height: 100%;width: 100%">
+                            <form:select placeholder="Select Your Role" path="role" style="height: 100%;width: 100%" id="role-form">
 
                                 <form:option value="ROLE_USER"/>
                                 <form:option value="ROLE_ADMIN"/>
@@ -292,16 +323,11 @@
                    <div class="cols-sm-10">
                        <div class="input-group">
                            <span class="input-group-addon"><i class="fa fa-universal-access fa" aria-hidden="true"></i></span>
-                           <form:select placeholder="Select Your department" path="depId" style="height: 100%;width: 100%">
+                           <form:select placeholder="Select Your department" path="depId" style="height: 100%;width: 100%" id="depId-form">
 
                                <c:forEach var="department" items="${departments}">
                                    <form:option value='${department.depID}'>${department.depName}</form:option>
                                </c:forEach>
-
-                               <%--<form:option value="Service"/>--%>
-                               <%--<form:option value="Sells"/>--%>
-                               <%--<form:option value="fdgsdfg"/>--%>
-                               <%--<form:option value="fdgsdfxgzdgdfg"/>--%>
 
                            </form:select>
 
@@ -312,7 +338,7 @@
 
 
                 <div class="form-group ">
-                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </div>
 
             </form:form>

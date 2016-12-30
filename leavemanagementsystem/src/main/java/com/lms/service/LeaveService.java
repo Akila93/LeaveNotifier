@@ -137,4 +137,12 @@ public class LeaveService {
        return leaveDao.getTodayLeaves(depId);
     }
 
+
+    public List<Leave> getLeavesOfDay(String date, int projectLeaderId){
+
+        List<Leave> leavesOfDay = leaveDao.getLeavesOfDay(date, projectLeaderId);
+        return leavesOfDay;
+
+    }
+
 }

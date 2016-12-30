@@ -34,6 +34,7 @@ import java.security.Principal;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -59,7 +60,9 @@ public class LoginController {
     public String registration(Model model,Principal principal) {
         //////////////////////////////OBJECTS///////////////////////////////
         Integer userId=null;
-
+        List<User> allUsers = userService.getAllUsers();
+        model.addAttribute("users",allUsers);
+        System.out.println( "email is"+allUsers.get(1).getEmail());
 
         //////////////////////// FILLING OBJECTS//////////////////////////////
         if(principal!=null){
@@ -98,11 +101,12 @@ public class LoginController {
     public String welcomeUrl(Model model){
 
         try {
-            String token=Common.getToken();
-            model.addAttribute("code",token);
+            String token=Common.getToken();//Common.refreshAccessToken("1/2kDjSKTfeLUWxGdiFeosDQIgvWWtCdPcl6o1tz7zUBU");//
+
+            //model.addAttribute("code",token);
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("code","fgzsdg");
+            //model.addAttribute("code","fgzsdg");
         }
         return "welcome";
     }
@@ -111,6 +115,10 @@ public class LoginController {
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model,
                                Principal principal) {
+
+        List<User> allUsers = userService.getAllUsers();
+
+        model.addAttribute("users",allUsers);
         System.out.println("department id"+userForm.getDepId());
 
         if (bindingResult.hasErrors()) {
@@ -121,7 +129,7 @@ public class LoginController {
         }
         //check whether thereis a hsenidmobile domain name.if then.
         if (userForm.getEmail().contains("@hsenidmobile")||userForm.getEmail().contains("@hsenid")) {
-            userService.createUserAccount(userForm);
+            userService.updateUserAccount(userForm);
         } else {
             model.addAttribute("errorName","this email don't have access");
             model.addAttribute("userEmail",userService.getUserByName(principal.getName()).getEmail());
@@ -218,7 +226,7 @@ public class LoginController {
             ///EXCEPTIONS
         } catch (IOException e) {
             e.printStackTrace();
-            ///EXCEPTIONS
+
         }
 
     }
@@ -239,8 +247,6 @@ public class LoginController {
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
         System.out.println("before execution");
         ResponseEntity<String> exchange = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-        //System.out.println(exchange);
-       // exchange.getHeaders(;
         System.out.println("after execution");
     }
 
